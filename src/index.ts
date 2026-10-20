@@ -43,6 +43,11 @@ import { defaultAuthProxyConfig } from '@/plugins/auth-proxy-adapter/config';
 import { fileExists, injectCSS, injectCSSAsFile } from '@/plugins/utils/main';
 import { restart, setupAppControls } from '@/providers/app-controls';
 import {
+  hideMainWindow,
+  showMainWindow,
+  trackPictureInPictureWindow,
+} from '@/providers/main-window-visibility';
+import {
   APP_PROTOCOL,
   handleProtocol,
   setupProtocolHandler,
@@ -428,6 +433,8 @@ async function createMainWindow() {
 
   const win = new BrowserWindow(electronWindowSettings);
 
+  trackPictureInPictureWindow(win);
+
   await initHook(win);
   initTheme(win);
 
@@ -722,7 +729,7 @@ app.on('activate', async () => {
   if (mainWindow === null) {
     mainWindow = await createMainWindow();
   } else if (!mainWindow.isVisible()) {
-    mainWindow.show();
+    showMainWindow(mainWindow);
   }
 });
 
@@ -945,12 +952,8 @@ app.whenReady().then(async () => {
       return;
     }
 
-    if (mainWindow.isMinimized()) {
-      mainWindow.restore();
-    }
-
     if (!mainWindow.isVisible()) {
-      mainWindow.show();
+      showMainWindow(mainWindow);
     }
 
     mainWindow.focus();
@@ -1036,7 +1039,7 @@ app.whenReady().then(async () => {
       // Hide the window instead of quitting (quit is available in tray options)
       if (!forceQuit) {
         event.preventDefault();
-        mainWindow!.hide();
+        hideMainWindow(mainWindow!);
       }
     });
   }

@@ -9,6 +9,10 @@ import { APPLICATION_NAME, t } from '@/i18n';
 
 import * as config from './config';
 import { restart } from './providers/app-controls';
+import {
+  hideMainWindow,
+  showMainWindow,
+} from './providers/main-window-visibility';
 import { getSongControls } from './providers/song-controls';
 import { registerCallback, SongInfoEvent } from './providers/song-info';
 
@@ -81,10 +85,10 @@ export const setUpTray = (app: Electron.App, win: Electron.BrowserWindow) => {
     if (config.get('options.trayClickPlayPause')) {
       playPause();
     } else if (win.isVisible()) {
-      win.hide();
+      hideMainWindow(win);
       app.dock?.hide();
     } else {
-      win.show();
+      showMainWindow(win);
       app.dock?.show();
     }
   });
@@ -111,7 +115,7 @@ export const setUpTray = (app: Electron.App, win: Electron.BrowserWindow) => {
     {
       label: t('main.tray.show'),
       click() {
-        win.show();
+        showMainWindow(win);
         app.dock?.show();
       },
     },

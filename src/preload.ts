@@ -15,6 +15,15 @@ import {
   loadAllPreloadPlugins,
 } from './loader/preload';
 
+const markElectronHost = (): void => {
+  document.documentElement?.setAttribute('data-electron-host', '');
+};
+if (document.documentElement) markElectronHost();
+else
+  document.addEventListener('readystatechange', markElectronHost, {
+    once: true,
+  });
+
 // @ts-expect-error dummy
 globalThis.customElements = { define() { } };
 
