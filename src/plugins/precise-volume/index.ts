@@ -1,31 +1,30 @@
 import prompt, { type KeybindOptions } from 'custom-electron-prompt';
-import { globalShortcut, type MenuItem } from 'electron';
+import { globalShortcut, type MenuItem, webFrame } from 'electron';
 
 import { t } from '@/i18n';
 import promptOptions from '@/providers/prompt-options';
 import { createPlugin } from '@/utils';
 
 import { overrideListener } from './override';
-import { onConfigChange, onPlayerApiReady } from './renderer';
+import {
+  onConfigChange,
+  onPlayerApiReady,
+  removeNewSliderListener,
+  restoreVolumeScript,
+} from './renderer';
 import hudStyle from './volume-hud.css?inline';
 
 export type PreciseVolumePluginConfig = {
   enabled: boolean;
-  /**
-   * Percentage of volume to change
-   */
+  /** Percentage of volume to change. */
   steps: number;
-  /**
-   * Enable ArrowUp + ArrowDown local shortcuts
-   */
+  /** Enable ArrowUp + ArrowDown local shortcuts. */
   arrowsShortcut: boolean;
   globalShortcuts: {
     volumeUp: string;
     volumeDown: string;
   };
-  /**
-   * Plugin save volume between session here
-   */
+  /** Plugin saves the volume between sessions here. */
   savedVolume: number | undefined;
 };
 
@@ -34,7 +33,7 @@ export default createPlugin({
   description: () => t('plugins.precise-volume.description'),
   restartNeeded: true,
   config: {
-    enabled: true,
+    enabled: false,
     steps: 1,
     arrowsShortcut: true,
     globalShortcuts: {
@@ -43,6 +42,38 @@ export default createPlugin({
     },
     savedVolume: undefined,
   } as PreciseVolumePluginConfig,
+  settings: [
+    {
+      type: 'slider',
+      key: 'steps',
+      label: () => t('plugins.precise-volume.settings.steps'),
+      min: 1,
+      max: 20,
+      unit: '%',
+    },
+    {
+      type: 'switch',
+      key: 'arrowsShortcut',
+      label: () => t('plugins.precise-volume.settings.arrows-shortcut'),
+      // The listeners are wired once, on player API ready.
+      restartNeeded: true,
+    },
+    {
+      type: 'text',
+      key: 'globalShortcuts.volumeUp',
+      label: () => t('plugins.precise-volume.settings.shortcut-up'),
+      placeholder: () => 'e.g. Ctrl+Shift+Up',
+      // Registered by the backend on start, never re-read.
+      restartNeeded: true,
+    },
+    {
+      type: 'text',
+      key: 'globalShortcuts.volumeDown',
+      label: () => t('plugins.precise-volume.settings.shortcut-down'),
+      placeholder: () => 'e.g. Ctrl+Shift+Down',
+      restartNeeded: true,
+    },
+  ],
   stylesheets: [hudStyle],
   menu: async ({ setConfig, getConfig, window }) => {
     const config = await getConfig();
@@ -61,7 +92,7 @@ export default createPlugin({
       setConfig(options);
     }
 
-    // Helper function for globalShortcuts prompt
+    // Helper for the globalShortcuts prompt
     const kb = (
       label_: string,
       value_: string,
@@ -168,25 +199,51 @@ export default createPlugin({
     ];
   },
 
-  async backend({ getConfig, ipc }) {
-    const config = await getConfig();
+  backend: {
+    async start({ getConfig, ipc }) {
+      const config = await getConfig();
 
-    if (config.globalShortcuts?.volumeUp) {
-      globalShortcut.register(config.globalShortcuts.volumeUp, () =>
-        ipc.send('changeVolume', true),
-      );
-    }
+      if (config.globalShortcuts?.volumeUp) {
+        globalShortcut.register(config.globalShortcuts.volumeUp, () =>
+          ipc.send('changeVolume', true),
+        );
+      }
 
-    if (config.globalShortcuts?.volumeDown) {
-      globalShortcut.register(config.globalShortcuts.volumeDown, () =>
-        ipc.send('changeVolume', false),
-      );
-    }
+      if (config.globalShortcuts?.volumeDown) {
+        globalShortcut.register(config.globalShortcuts.volumeDown, () =>
+          ipc.send('changeVolume', false),
+        );
+      }
+    },
+    async stop({ getConfig }) {
+      const config = await getConfig();
+
+      if (config.globalShortcuts?.volumeUp) {
+        globalShortcut.unregister(config.globalShortcuts.volumeUp);
+      }
+
+      if (config.globalShortcuts?.volumeDown) {
+        globalShortcut.unregister(config.globalShortcuts.volumeDown);
+      }
+    },
+  },
+
+  preload: {
+    /** Restore the saved volume before YTM starts playback */
+    async start({ getConfig }) {
+      const { savedVolume } = await getConfig();
+      if (typeof savedVolume === 'number') {
+        await webFrame.executeJavaScript(restoreVolumeScript(savedVolume));
+      }
+    },
   },
 
   renderer: {
     start() {
       overrideListener();
+    },
+    stop() {
+      removeNewSliderListener();
     },
     onPlayerApiReady,
     onConfigChange,
