@@ -29,8 +29,8 @@ const WINDOW_CHROME_CSS = String.raw`
                     flex-direction: column;
                     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15);
                     clip-path: inset(0 round 16px);
-                    -webkit-app-region: drag;
-                    z-index: 999999;
+                    -webkit-app-region: no-drag;
+                    z-index: 1;
                     animation: glassyAppear 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
                   }
 
@@ -49,6 +49,7 @@ const WINDOW_CHROME_CSS = String.raw`
                     background: radial-gradient(circle, rgba(123, 97, 255, 0.18) 0%, rgba(123, 97, 255, 0) 70%);
                     z-index: -1;
                     pointer-events: none;
+                    -webkit-app-region: no-drag !important;
                     filter: blur(40px);
                   }
 
@@ -62,6 +63,7 @@ const WINDOW_CHROME_CSS = String.raw`
                     background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(0, 242, 254, 0) 70%);
                     z-index: -1;
                     pointer-events: none;
+                    -webkit-app-region: no-drag !important;
                     filter: blur(40px);
                   }
 
@@ -130,7 +132,7 @@ const WINDOW_CHROME_CSS = String.raw`
                   }
 
                   #glassy-close-btn {
-                    -webkit-app-region: no-drag;
+                    -webkit-app-region: no-drag !important;
                     width: 30px;
                     height: 30px;
                     background: rgba(255, 255, 255, 0.1);
@@ -271,7 +273,7 @@ const LEGACY_OPTIONS_CSS = String.raw`
                   #glassy-content {
                     flex: 1;
                     overflow: auto;
-                    -webkit-app-region: no-drag;
+                    -webkit-app-region: no-drag !important;
                     border-radius: 0 0 16px 16px;
                     padding: 1.25rem 2rem 1rem !important; /* Restore original body padding */
                     box-sizing: border-box;
