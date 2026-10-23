@@ -29,6 +29,7 @@ import { parse } from 'node-html-parser';
 import { availableLanguages } from 'virtual:i18n';
 import { allPlugins, mainPlugins } from 'virtual:plugins';
 
+import { refreshChangelog } from '@/changelog';
 import * as config from '@/config';
 import { APPLICATION_NAME, loadI18n, setLanguage, t } from '@/i18n';
 import {
@@ -37,7 +38,7 @@ import {
   getAllLoadedMainPlugins,
   loadAllMainPlugins,
 } from '@/loader/main';
-import { refreshMenu, setApplicationMenu } from '@/menu';
+import { openAboutWindow, refreshMenu, setApplicationMenu } from '@/menu';
 import musicPlayerCss from '@/music-player.css?inline';
 import { defaultAuthProxyConfig } from '@/plugins/auth-proxy-adapter/config';
 import { fileExists, injectCSS, injectCSSAsFile } from '@/plugins/utils/main';
@@ -970,6 +971,12 @@ app.whenReady().then(async () => {
       clearTimeout(updateTimeout);
     }, 2000);
     electronUpdater.autoUpdater.on('update-available', () => {
+      // Warm the changelog cache while the dialog is on screen so the
+      // "What's New" button opens the About window with the latest entries.
+      refreshChangelog().catch((error: unknown) => {
+        console.warn('[changelog] Could not warm the changelog cache', error);
+      });
+
       const downloadLink =
         'https://github.com/NanKillBro/glassy-music-nankill/releases/latest';
       const dialogOptions: Electron.MessageBoxOptions = {
@@ -978,6 +985,7 @@ app.whenReady().then(async () => {
           t('main.dialog.update-available.buttons.ok'),
           t('main.dialog.update-available.buttons.download'),
           t('main.dialog.update-available.buttons.disable'),
+          t('main.dialog.update-available.buttons.whats-new'),
         ],
         title: t('main.dialog.update-available.title'),
         message: t('main.dialog.update-available.message'),
@@ -1004,6 +1012,12 @@ app.whenReady().then(async () => {
           // Disable updates
           case 2: {
             config.set('options.autoUpdates', false);
+            break;
+          }
+
+          // What's New
+          case 3: {
+            openAboutWindow(mainWindow ?? undefined);
             break;
           }
 

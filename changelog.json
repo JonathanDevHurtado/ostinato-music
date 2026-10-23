@@ -1,0 +1,322 @@
+{
+  "$schema": "./changelog.schema.json",
+  "schemaVersion": 1,
+  "updatedAt": "2026-10-23",
+  "entries": [
+    {
+      "version": "4.1.0",
+      "tag": "release",
+      "intro": "🎉 **Thank you guys so much for 300 stars!** This means a lot to me! GitHub says it's already been two months since my last release, so here's a new version!",
+      "sections": [
+        {
+          "title": "🔄 Updates",
+          "items": [
+            "Upstreamed to commit `a883022`",
+            "Updated Better Lyrics (New Engine) to version `3.0.0.2` ^(4)",
+            "Backported some compatible fixes and features from the New Engine to Better Lyrics (Old Engine).",
+            "Updated Better Lyrics Shaders to version `1.5.0`"
+          ]
+        },
+        {
+          "title": "✨ New Features & UI",
+          "items": [
+            "Added the `smooth-transition` plugin (inspired by [pear-desktop PR #4462](https://github.com/pear-devs/pear-desktop/pull/4662)).",
+            "Added the crossfade plugin, which now works properly.",
+            "Added the `skip-ai-music` plugin from [pear-desktop PR #4646](https://github.com/pear-devs/pear-desktop/pull/4646).",
+            "You can now change Better Lyrics Shaders settings while using the Better Lyrics theme.",
+            "Added a new splash screen when opening the app, kind of like Discord's.",
+            "Added a button to download the currently playing track in its original quality.",
+            "Improved performance in a few areas. ^(1)",
+            "Some new features from the Better Lyrics and Better Lyrics Shaders updates aren't listed here."
+          ]
+        },
+        {
+          "title": "🐛 Bug Fixes",
+          "items": [
+            "Fixed solid colors in the new player, which may be part of an A/B test. ^(3)",
+            "Fixed an issue that prevented opening the Better Lyrics (New Engine) options.",
+            "Fixed some issues with the Better Lyrics theme editor.",
+            "Fixed the search tab being misaligned. ^(3)",
+            "Fixed song info becoming offset in crossfade after using fullscreen lyrics without fullscreen.",
+            "Fixed the fullscreen bottom-hover behavior: hovering at the bottom now shows the player bar as usual."
+          ]
+        },
+        {
+          "title": "📜 Other Changes",
+          "items": [
+            "Changed the sublabels for the Better Lyrics (Old Engine) and Better Lyrics (New Engine) options.",
+            "Changed the app ID from `glassy-music-nankill-mod` to `glassy-music-nankill`. ^(2)",
+            "Changed the WMClass from `nankill.xyz.glassymusic.mod` to `glassymusic.nankill`.",
+            "Disabled background throttling."
+          ]
+        }
+      ],
+      "footnotes": [
+        "**(1)** The smooth progress bar is disabled by default because it caused frequent layout recalculations. The in-app menu was also improved ([pear-desktop PR #4671](https://github.com/pear-devs/pear-desktop/pull/4671)), and only the active language is now loaded at startup ([pear-desktop PR #4674](https://github.com/pear-devs/pear-desktop/pull/4674)).",
+        "**(2)** This change may break some existing installations, so you may need to uninstall the app before updating to this version.",
+        "**(3)** YTM changed something that broke these things, and this update fixes them.",
+        "**(4)** It still has some UI bugs. I'll fix them in the next release."
+      ]
+    },
+    {
+      "version": "4.0.0",
+      "tag": "release",
+      "intro": "🎉 **Thank you guys so much for 200 stars!** This means a lot to me. No idea why my project has that many stars recently, but I decided to re-version the release so that future versions follow Semantic Versioning. So yeah, v4.0.0 is here guys! This update is bigger than normal.",
+      "sections": [
+        {
+          "title": "🔄 Updates",
+          "items": [
+            "Upstreamed to commit `1e2aac5`",
+            "Updated BL (New Engine) to version `2.4.0.3`",
+            "Updated YDP to version `v1.8.1`"
+          ]
+        },
+        {
+          "title": "✨ New Features & UI",
+          "items": [
+            "Added new plugin: Better Lyrics Tacet ^(1), Pitch Shift",
+            "Added new scroll type: GlassyFlow Turbo ^(2)",
+            "Player speed plugin now has an option to change pitch",
+            "New UI for the Play Together popup",
+            "New UI for the top bar icon row",
+            "Better Lyrics now has 2 engine options: New Engine (still in development) and Old Engine (default). Allows you to change the scroll animation.",
+            "Some performance improvements ^(2)"
+          ]
+        },
+        {
+          "title": "🐛 Bug Fixes",
+          "items": [
+            "Fixed nav bar have solid color. [#14](https://github.com/NanKillBro/glassy-music-nankill/issues/14) ^(3)",
+            "Fixed invisible arrow in Better Lyrics settings.",
+            "Fixed Toggling the Navigation plugin multiple times will spawn multiple controls. [#12](https://github.com/NanKillBro/glassy-music-nankill/issues/12)",
+            "Fixed Song/Video misaligned to the right ^(3)"
+          ]
+        },
+        {
+          "title": "📜 Other Changes",
+          "items": [
+            "Merge Theme no longer has a version.",
+            "Hovering over lyrics no longer makes them brighter, but scrolling still works.",
+            "Hovering at the bottom in fullscreen no longer makes the control bar appear; you now need to hover over the Better Lyrics Dock. ^(4)",
+            "\"Instrumental Only\" lyrics will now be hidden.",
+            "Moved font settings into the Better Lyrics plugin menu.",
+            "\"Fullscreen lyrics without fullscreen\" button now also shows up in the top bar row.",
+            "GlassyFlow no longer occasionally keeps past lyrics showing."
+          ]
+        }
+      ],
+      "footnotes": [
+        "**(1)** Tacet is still experimental. You can use it for crossfade only if you want, but for separating voices, it may or may not work and can cause performance issues or freeze the app. Currently, only Windows supports using the GPU to separate voices. On Linux, it may use the CPU since the GPU doesn't work for some reason.",
+        "**(2)** YTM recently changed something that made the app really laggy. This is my best attempt to improve performance against it, though some performance issues remain.",
+        "**(3)** YTM changed something that broke things, and this update fixes it.",
+        "**(4)** YouTube broke something, so I decided to turn the bug into a feature, lol."
+      ]
+    },
+    {
+      "version": "3.12.10-beta",
+      "tag": "beta",
+      "sections": [
+        {
+          "items": [
+            "Upstreamed to commit `1a84f1d`",
+            "Updated Better Lyrics to commit `8ec28ef`",
+            "Updated MERGE THEME from {{v23}} to {{v24}}",
+            "Added new fullscreen UI",
+            "Added new Better Lyrics dock",
+            "Fixed issue where the artwork frame was stretched",
+            "Fixed crossfade recently not working",
+            "Fixed unison dock too low"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.12.9-beta",
+      "tag": "beta",
+      "sections": [
+        {
+          "items": [
+            "Upstreamed to commit `0c42c82`",
+            "Updated Better Lyrics to commit `fdd3848`",
+            "Updated Better Lyrics Shaders to commit `6b80f7f`",
+            "Updated MERGE THEME from {{v22}} to {{v23}}",
+            "New option that allows users to customize themes in Better Lyrics Settings",
+            "New option that allows users to disable the minimum window size",
+            "New settings UI for some plugins and components",
+            "New plugin: YouTubeDiscordPresence (XFG16)",
+            "Replaced the adblocker plugin with do-not-track",
+            "Fixed the Unison dock",
+            "Fixed some toasts looking different",
+            "Fixed the big button for some users with the Comments tab",
+            "Fixed the source dock overlapping issue",
+            "Fixed blurry icons (I guess)"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.12.8-beta",
+      "tag": "beta",
+      "sections": [
+        {
+          "items": [
+            "Upstreamed to commit: `49130f8`",
+            "Updated Better Lyrics to commit `0b34557`",
+            "Updated MERGE THEME from {{v21}} to {{v22}}",
+            "New GlassyFlow v5",
+            "New Better Lyrics Settings UI",
+            "New Fonts and Size settings",
+            "New AM Lyrics effect",
+            "New redesign search box, user menu, settings menu",
+            "Fixed in-app-menu turn off by default on Linux",
+            "Fixed Better Lyrics export identity doesn't work",
+            "Fixed crossfade artwork on cover and backgroud only works sometime"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.12.7-beta",
+      "tag": "beta",
+      "sections": [
+        {
+          "items": [
+            "Upstreamed to commit: `0b3dab6`",
+            "Updated Better Lyrics to `v2.3.0-canary 1`",
+            "Updated MERGE THEME from {{v20}} to {{v21}}",
+            "New share UI and toast UI",
+            "New Colors UI",
+            "New MacOS icons",
+            "New fullscreen lyrics without fullscreen",
+            "New Resync Lyrics button",
+            "New Crossfade animated artwork",
+            "Fixed text alignment on different languages",
+            "Fixed share menu and add to playlist menu doesn't have animation",
+            "Fixed crossfade artwork sometime not work or weird behavior"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.12.6-beta",
+      "tag": "beta",
+      "sections": [
+        {
+          "items": [
+            "Upstreamed to commit: `6aa7cdb`",
+            "Updated Better Lyrics to commit: `baf075d`",
+            "Updated Better Lyrics Shaders to commit: `6ce176e`",
+            "Updated MERGE THEME from {{v19}} to {{v20}}",
+            "New tabs UI",
+            "Remove old scroll effect, new GlassyFlow v4",
+            "Fixed static lyrics not unblurring"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.12.5-beta",
+      "tag": "beta",
+      "sections": [
+        {
+          "items": [
+            "Upstreamed to commit: `c583e90`",
+            "Updated MERGE THEME from {{v18}} to {{v19}}",
+            "Updated Better Lyrics to commit: `b8ca6de`",
+            "Added new fixed spring scroll effect (delay)",
+            "Discord RPC Github URL changed",
+            "Fixed some part don't have animation",
+            "Fixed weird crossfade img",
+            "Fixed library button not showing up for premium users"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.12.4-beta",
+      "tag": "beta",
+      "sections": [
+        {
+          "items": [
+            "Upstreamed to commit: `e3d870a`",
+            "Updated MERGE THEME from {{v17}} to {{v18}}",
+            "Added AM spring scroll effect (with selectable options)",
+            "Redesigned the in-app menu",
+            "Added linear gradient styling to the top bar",
+            "More rounded corners across the UI",
+            "Fixed Discord RPC issue with 32-character limit",
+            "Updated README documentation"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.12.3-beta",
+      "tag": "beta",
+      "sections": [
+        {
+          "items": [
+            "Upstreamed to commit: `3c67778`",
+            "Updated MERGE THEME from {{v16}} to {{v17}}",
+            "Major UI Update (MT)"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.12.2-beta",
+      "tag": "beta",
+      "sections": [
+        {
+          "items": [
+            "Upstreamed to commit: `658b3da`",
+            "Updated Better Lyrics to `v2.2.0 stable`",
+            "Updated Better Lyrics Shaders to `v1.1.4`",
+            "Updated MERGE THEME from {{v15}} to {{v16}}",
+            "Minor improvements and optimizations 🛠️",
+            "Removed Low Performance Mode for BLS 🗑️"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.12.1-beta",
+      "tag": "beta",
+      "sections": [
+        {
+          "items": [
+            "Based on commit: `f50025f`",
+            "Update Better Lyrics to `2.2.0.3-canary`",
+            "Update Better Lyric Shaders to `v1.1.3`",
+            "Update MERGE THEME from {{v14}} to {{v15}}",
+            "Add fade effect for main background (MT)",
+            "Add **animated artwork** (BLS)",
+            "Some performance fix and optimize (BL, U) 🚀"
+          ]
+        }
+      ]
+    },
+    {
+      "version": "3.12.0-beta",
+      "tag": "beta",
+      "sections": [
+        {
+          "items": [
+            "Based on commit: `1d72d12`",
+            "✨ **Rebrand the whole client**",
+            "Add new **NonStop plugin** 🎵",
+            "Add new **Adblock**",
+            "Add new **Better Lyrics Shaders**",
+            "Add Low Performance Mode (for BLS)",
+            "Add **Album Color Theme (Modded)**",
+            "Update MERGE THEME from {{V13}} to {{V14}}",
+            "Update Betterlyrics to `v2.2.0.2-canary`",
+            "Fixed some small bugs and optimize 🐛",
+            "Remove Update Check",
+            "Remove MERGE THEME dynamic background"
+          ]
+        }
+      ]
+    }
+  ]
+}

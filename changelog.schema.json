@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Glassy Music changelog",
+  "description": "Remote changelog consumed by the About window. Inline markup: **bold**, `code`, [label](https://url), ^(1) for a cyan superscript, {{text}} for cyan text.",
+  "type": "object",
+  "required": ["schemaVersion", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "updatedAt": {
+      "type": "string",
+      "description": "Informational only. Bump it when you edit entries."
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": { "$ref": "#/definitions/entry" }
+    }
+  },
+  "definitions": {
+    "entry": {
+      "type": "object",
+      "required": ["version", "tag", "sections"],
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Badge text after 'Version ', e.g. 4.1.0 or 3.12.10-beta",
+          "maxLength": 64
+        },
+        "tag": {
+          "type": "string",
+          "enum": ["release", "beta"],
+          "description": "Rendered uppercase. 'release' uses the blue tag style."
+        },
+        "intro": {
+          "type": "string",
+          "description": "Optional highlighted paragraph above the sections.",
+          "maxLength": 20000
+        },
+        "sections": {
+          "type": "array",
+          "maxItems": 20,
+          "items": { "$ref": "#/definitions/section" }
+        },
+        "footnotes": {
+          "type": "array",
+          "maxItems": 20,
+          "items": { "type": "string", "maxLength": 4000 }
+        }
+      }
+    },
+    "section": {
+      "type": "object",
+      "required": ["items"],
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Optional. Omit for a plain list with no heading.",
+          "maxLength": 200
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 100,
+          "items": { "type": "string", "maxLength": 4000 }
+        }
+      }
+    }
+  }
+}

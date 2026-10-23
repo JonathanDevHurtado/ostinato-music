@@ -10,6 +10,11 @@ declare module '*.html?raw' {
 
   export default html;
 }
+declare module '*.json?raw' {
+  const json: string;
+
+  export default json;
+}
 declare module '*.svg?inline' {
   const base64: string;
 

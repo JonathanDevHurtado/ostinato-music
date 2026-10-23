@@ -135,6 +135,9 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
 
+      - name: Validate changelog
+        run: pnpm changelog:validate
+
       - name: Get version
         run: |
           VERSION_NUM=$(node -pe "require('./package.json').version")

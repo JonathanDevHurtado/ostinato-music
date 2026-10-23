@@ -13,6 +13,12 @@ import { satisfies } from 'semver';
 import { availableLanguages, languageLabels } from 'virtual:i18n';
 import { allPlugins } from 'virtual:plugins';
 
+import {
+  getChangelog,
+  refreshChangelog,
+  serializeForScript,
+  type ChangelogPayload,
+} from '@/changelog';
 import { APPLICATION_NAME, setLanguage, t } from '@/i18n';
 
 import * as config from './config';
@@ -98,7 +104,7 @@ export const refreshMenu = async (win: BrowserWindow) => {
 let aboutWindow: BrowserWindow | null = null;
 
 // Hàm mở cửa sổ About Custom
-const openAboutWindow = (parentWin: BrowserWindow) => {
+export const openAboutWindow = (parentWin?: BrowserWindow) => {
   if (aboutWindow && !aboutWindow.isDestroyed()) {
     aboutWindow.focus();
     return;
@@ -129,10 +135,55 @@ const openAboutWindow = (parentWin: BrowserWindow) => {
   });
 
   // Nội dung HTML/CSS nạp từ file riêng
-  const htmlContent = aboutHtmlRaw.replace('${packageJson.version}', packageJson.version);
+  const initialChangelog = getChangelog();
+  const htmlContent = aboutHtmlRaw
+    .replace('${packageJson.version}', () => packageJson.version)
+    .replace(
+      '/*__CHANGELOG_DATA__*/null',
+      () => serializeForScript(initialChangelog),
+    );
 
   // Load chuỗi HTML dưới dạng Data URI
   aboutWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(htmlContent)}`);
+
+  const applyChangelog = (payload: ChangelogPayload) => {
+    if (!aboutWindow || aboutWindow.isDestroyed()) return;
+
+    aboutWindow.webContents
+      .executeJavaScript(
+        `window.__glassySetChangelog(${serializeForScript(payload)})`,
+      )
+      .catch((error: unknown) => {
+        console.warn('[changelog] Could not update the About window', error);
+      });
+  };
+
+  // The renderer defines __glassySetChangelog at the end of the page, so if
+  // the request wins the race against the data: URL finishing load, queue it.
+  let pendingChangelog: ChangelogPayload | null = null;
+  aboutWindow.webContents.once('did-finish-load', () => {
+    if (!pendingChangelog) return;
+    applyChangelog(pendingChangelog);
+    pendingChangelog = null;
+  });
+
+  // Mở ngay bằng dữ liệu đã lưu, rồi cập nhật ngầm từ GitHub.
+  // Force: mở About là hành động chủ động, luôn muốn dữ liệu mới nhất
+  // (ETag vẫn trả 304 khi không đổi nên chi phí rất nhỏ).
+  refreshChangelog(true)
+    .then((latest) => {
+      if (!latest || !aboutWindow || aboutWindow.isDestroyed()) return;
+      if (JSON.stringify(latest) === JSON.stringify(initialChangelog)) return;
+
+      if (aboutWindow.webContents.isLoading()) {
+        pendingChangelog = latest;
+      } else {
+        applyChangelog(latest);
+      }
+    })
+    .catch((error: unknown) => {
+      console.warn('[changelog] Could not refresh the About window', error);
+    });
 
   // Handle close animation at the Electron level (compositor, not renderer)
   aboutWindow.webContents.on('page-title-updated', (event, title) => {

@@ -41,11 +41,12 @@
     "format": "pnpm oxfmt --write src",
     "format:check": "pnpm oxfmt --check src",
     "changelog": "pnpm dlx auto-changelog",
+    "changelog:validate": "node tooling/changelog-validate.mjs",
     "release:linux": "pnpm clean && pnpm build && pnpm electron-builder --linux -p always -c.snap.publish=github",
     "release:mac": "pnpm clean && pnpm build && pnpm electron-builder --mac -p always",
     "release:win": "pnpm clean && pnpm build && pnpm electron-builder --win -p always",
     "typecheck": "pnpm tsc -p tsconfig.json --noEmit",
-    "check": "pnpm lint && pnpm format:check && pnpm typecheck"
+    "check": "pnpm lint && pnpm format:check && pnpm changelog:validate && pnpm typecheck"
   },
   "engines": {
     "node": ">=22",
