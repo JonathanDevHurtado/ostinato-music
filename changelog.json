@@ -4,6 +4,40 @@
   "updatedAt": "2026-10-23",
   "entries": [
     {
+      "version": "4.1.1",
+      "tag": "release",
+      "intro": "Just a small update, nothing too special. I'm planning to work on a performance improvement for the app. I'm not sure whether it's possible, but it's worth a try. The next release will tell us whether it worked, lol. I've been busy recently, so you can expect commits to be pushed more slowly. PRs that improve the app experience are more than welcome!",
+      "sections": [
+        {
+          "title": "🔄 Updates",
+          "items": [
+            "Upstreamed to commit `7c55260`",
+            "Updated Better Lyrics (New Engine) to commit `8c2f405`",
+            "Backported some compatible fixes and features from the New Engine to Better Lyrics (Old Engine)."
+          ]
+        },
+        {
+          "title": "✨ New Features & UI",
+          "items": [
+            "Added the `dismiss-multidevice-popup` plugin. ^(1)",
+            "Updated some dependencies. For more details, see [this commit](https://github.com/NanKillBro/glassy-music-nankill/commit/21e95914107f2d60f73c70622dbb4dd92969e060).",
+            "The changelog in the About tab now updates dynamically.",
+            "Some new features from the Better Lyrics (New Engine) updates aren't listed here."
+          ]
+        },
+        {
+          "title": "🐛 Bug Fixes",
+          "items": [
+            "Fixed precise volume not working. ^(1)",
+            "Partially fixed the Better Lyrics (New Engine) popup, it may still not work reliably."
+          ]
+        }
+      ],
+      "footnotes": [
+        "**(1)** These changes were not made by me. I picked them from [michei69/pear-desktop](https://github.com/michei69/pear-desktop). Thank you so much!"
+      ]
+    },
+    {
       "version": "4.1.0",
       "tag": "release",
       "intro": "🎉 **Thank you guys so much for 300 stars!** This means a lot to me! GitHub says it's already been two months since my last release, so here's a new version!",
