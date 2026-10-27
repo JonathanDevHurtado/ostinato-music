@@ -999,7 +999,7 @@ app.whenReady().then(async () => {
       });
 
       const downloadLink =
-        'https://github.com/JonathanDevHurtado/ostinato/releases/latest';
+        'https://github.com/JonathanDevHurtado/ostinato-music/releases/latest';
       const dialogOptions: Electron.MessageBoxOptions = {
         type: 'info',
         buttons: [

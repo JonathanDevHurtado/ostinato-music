@@ -1,8 +1,8 @@
 {
   "name": "ostinato",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Ostinato Music: adaptive fork of Glassy Music for YouTube Music",
-  "homepage": "https://github.com/JonathanDevHurtado/ostinato",
+  "homepage": "https://github.com/JonathanDevHurtado/ostinato-music",
   "license": "GPL-3.0",
   "author": {
     "name": "JonathanDevHurtado",
@@ -20,7 +20,7 @@
       "url": "https://github.com/JonathanDevHurtado"
     }
   ],
-  "repository": "JonathanDevHurtado/ostinato",
+  "repository": "JonathanDevHurtado/ostinato-music",
   "type": "module",
   "main": "./dist/main/index.js",
   "scripts": {

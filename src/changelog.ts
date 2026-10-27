@@ -4,8 +4,8 @@ import Store from 'electron-store';
 import snapshotRaw from '../changelog.json?raw';
 
 const CHANGELOG_URLS = [
-  'https://raw.githubusercontent.com/JonathanDevHurtado/ostinato/master/changelog.json',
-  'https://cdn.jsdelivr.net/gh/JonathanDevHurtado/ostinato@master/changelog.json',
+  'https://raw.githubusercontent.com/JonathanDevHurtado/ostinato-music/master/changelog.json',
+  'https://cdn.jsdelivr.net/gh/JonathanDevHurtado/ostinato-music@master/changelog.json',
 ];
 
 const CACHE_TTL_MS = 12 * 60 * 60 * 1000;

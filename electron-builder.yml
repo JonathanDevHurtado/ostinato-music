@@ -3,7 +3,7 @@ productName: "Ostinato Music"
 publish:
   provider: github
   owner: JonathanDevHurtado
-  repo: ostinato
+  repo: ostinato-music
 files:
   - '!*'
   - dist

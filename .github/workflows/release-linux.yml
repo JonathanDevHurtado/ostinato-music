@@ -64,6 +64,12 @@ jobs:
         run: |
           ls -lh pack/*.AppImage pack/*.deb pack/*.rpm pack/*.tar.gz pack/latest-linux.yml
 
+      - name: Generate checksums
+        run: |
+          cd pack
+          sha256sum *.AppImage *.deb *.rpm *.tar.gz latest-linux.yml > SHA256SUMS
+          cat SHA256SUMS
+
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
@@ -75,4 +81,5 @@ jobs:
             pack/*.rpm
             pack/*.tar.gz
             pack/latest-linux.yml
+            pack/SHA256SUMS
           fail_on_unmatched_files: true

@@ -66,7 +66,7 @@ export const buildDiscordButtons = (
   if (!config.hideGitHubButton) {
     buttons.push({
       label: 'View App On GitHub',
-      url: 'https://github.com/JonathanDevHurtado/ostinato',
+      url: 'https://github.com/JonathanDevHurtado/ostinato-music',
     });
   }
   return buttons.length ? buttons : undefined;

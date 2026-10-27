@@ -1,8 +1,34 @@
 {
   "$schema": "./changelog.schema.json",
   "schemaVersion": 1,
-  "updatedAt": "2026-10-26",
+  "updatedAt": "2026-10-27",
   "entries": [
+    {
+      "version": "0.1.1",
+      "tag": "release",
+      "intro": "Repository renamed to ostinato-music. This release updates every project URL and polishes the Linux release pipeline.",
+      "sections": [
+        {
+          "title": "📦 Repository",
+          "items": [
+            "The GitHub repository is now `JonathanDevHurtado/ostinato-music`.",
+            "Updater, changelog feeds, About and Discord links point to the new URL.",
+            "The package name and the `ostinato` executable stay unchanged so existing installs upgrade normally."
+          ]
+        },
+        {
+          "title": "📝 Documentation and releases",
+          "items": [
+            "README covers Fedora, Debian/Ubuntu and AppImage install commands, the repository layout and checksum verification.",
+            "Releases publish a `SHA256SUMS` file and use the Ostinato Music title.",
+            "Packages keep the post-install step that sets `chrome-sandbox` to 4755 for reliable sandboxing."
+          ]
+        }
+      ],
+      "footnotes": [
+        "Ostinato Music is based on [Glassy Music](https://github.com/NanKillBro/glassy-music-nankill), which is based on [Pear Desktop](https://github.com/pear-devs/pear-desktop). GPL-3.0."
+      ]
+    },
     {
       "version": "0.1.0",
       "tag": "release",

@@ -8,20 +8,23 @@ al mes.
 
 ## 1. Mapa de repositorios
 
-| Repo | Rol |
-| --- | --- |
-| `JonathanDevHurtado/ostinato` | **Nuestro fork** (la app). Aquí vive todo lo nuestro. |
-| `NanKillBro/glassy-music-nankill` | Upstream de la app. Solo lectura. |
-| `JonathanDevHurtado/better-lyrics-glassy` | Fork del submódulo de letras (fix de diálogos y Unison desactivado). |
-| `NanKillBro/better-lyrics-glassy` | Upstream del submódulo. |
-| `NanKillBro/shaders-glassy`, `NanKillBro/tacet-glassy` | Submódulos sin cambios locales. |
+| Repo                                                   | Rol                                                                  |
+| ------------------------------------------------------ | -------------------------------------------------------------------- |
+| `JonathanDevHurtado/ostinato-music`                    | **Nuestro fork** (la app). Aquí vive todo lo nuestro.                |
+| `NanKillBro/glassy-music-nankill`                      | Upstream de la app. Solo lectura.                                    |
+| `JonathanDevHurtado/better-lyrics-glassy`              | Fork del submódulo de letras (fix de diálogos y Unison desactivado). |
+| `NanKillBro/better-lyrics-glassy`                      | Upstream del submódulo.                                              |
+| `NanKillBro/shaders-glassy`, `NanKillBro/tacet-glassy` | Submódulos sin cambios locales.                                      |
+
+El repositorio de la app se llamó `ostinato` hasta la versión 0.1.1. GitHub redirige las URLs
+antiguas, pero la documentación y el updater ya usan `ostinato-music`.
 
 Remotes locales:
 
 ```bash
 git remote add upstream https://github.com/NanKillBro/glassy-music-nankill.git
 git remote set-url --push upstream DISABLED   # nunca empujar a upstream
-git remote set-url origin https://github.com/JonathanDevHurtado/ostinato.git
+git remote set-url origin https://github.com/JonathanDevHurtado/ostinato-music.git
 ```
 
 ---
@@ -33,7 +36,7 @@ git remote set-url origin https://github.com/JonathanDevHurtado/ostinato.git
 - `sync/upstream-<version>` → rama temporal para resolver el merge.
 - `feat/*` → trabajo en curso.
 - Los tags son `v<version>` y deben coincidir exactamente con `version` en `package.json`
-  (`v0.1.0`, `v0.2.0`…). El workflow de release aborta si no coinciden.
+  (`v0.1.1`, `v0.2.0`…). El workflow de release aborta si no coinciden.
 - No se hace rebase de `master`: el fork es público y otra gente puede tenerlo clonado.
 
 ---
@@ -127,8 +130,8 @@ git push origin v<version>
 ```
 
 El workflow `.github/workflows/release-linux.yml` compila AppImage, deb, rpm y tar.gz para
-x64, genera `latest-linux.yml` y crea el Release. Verificar que los cinco archivos estén
-adjuntos antes de anunciar.
+x64, genera `latest-linux.yml` y crea el Release. Verificar que los seis archivos estén adjuntos antes de anunciar
+(AppImage, deb, rpm, tar.gz, `latest-linux.yml` y `SHA256SUMS`).
 
 No se publican builds de macOS ni Windows desde este fork. Si se necesitan, se compilan
 localmente con `pnpm dist:mac` / `pnpm dist:win`; no hay workflow que los suba.
@@ -137,22 +140,22 @@ localmente con `pnpm dist:mac` / `pnpm dist:win`; no hay workflow que los suba.
 
 ## 6. Archivos críticos (puntos de conflicto esperados)
 
-| Archivo | Qué es nuestro | Cómo resolver |
-| --- | --- | --- |
-| `src/index.ts` | `minWidth/minHeight` 420×320, `app.setName('ostinato')`, `--class=ostinato`, appID de Windows, URL de descarga y fallback del menú nativo | Conservar nuestros valores; aceptar el resto del diff de upstream |
-| `src/plugins/in-app-menu/renderer/TitleBar.tsx` | Modo compacto (<720 px), panel vertical, cierre por clic externo en fase de captura, `data-compact` | Mantener el bloque `CompactMenuRenderer` y las señales `isCompact`/`compactOpen`; integrar el resto de los cambios de upstream |
-| `src/plugins/in-app-menu/renderer/PanelItem.tsx` | `min-width: 0`, `overflow: hidden`, `text-overflow: ellipsis`, `white-space: nowrap` en labels | Mantener las cuatro propiedades; son las que evitan filas superpuestas con nombres largos |
-| `src/plugins/in-app-menu/titlebar.css` | Media query `max-width: 719px` que oculta los `<li>` del titlebar | Mantener la query; si upstream cambia el layout del titlebar, revalidar el breakpoint |
-| `src/plugins/music-together/types.ts` | Avatar SVG local en lugar de `ui-avatars.com` | Conservar `localAvatar()`; no reintroducir la URL externa |
-| `electron-builder.yml` | `appId`, `productName`, `publish.owner/repo`, targets Linux x64, iconos | Conservar branding y publish; aceptar nuevas dependencias o targets de upstream solo si se prueban |
-| `package.json` | `name: ostinato`, `productName`, `desktopName`, repositorio, `author`/`contributors`, versión | Conservar `name` y branding; la versión se decide en el release |
-| `.gitmodules` | URL del submódulo de letras apunta a nuestro fork | Conservar nuestra URL y el pin con los parches |
-| `extensions-src/better-lyrics-glassy` (gitlink) | Commit con el fix de diálogos y Unison desactivado | Actualizar solo si los parches del punto 7 siguen aplicando limpio |
-| `src/changelog.ts` | URLs del changelog apuntan a nuestro repo | Conservar nuestro owner/repo |
-| `src/plugins/discord/utils.ts` | Botón “View App On GitHub” apunta a nuestro repo | Conservar nuestra URL |
-| `changelog.json` | Entrada propia de Ostinato Music al inicio | Mantenerla arriba y agregar una por release |
-| `.github/workflows/*` | `ci.yml`, `release-linux.yml`, `dependency-review.yml`, `reviewdog.yml` | Ignorar los workflows de upstream; no volver a agregar `build.yml`, `pr-build-artifacts.yml` ni `issue-triage.yml` |
-| `docs/*`, `README.md` | Documentación del fork | Conservar y actualizar cuando cambie el comportamiento |
+| Archivo                                          | Qué es nuestro                                                                                                                            | Cómo resolver                                                                                                                  |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `src/index.ts`                                   | `minWidth/minHeight` 420×320, `app.setName('ostinato')`, `--class=ostinato`, appID de Windows, URL de descarga y fallback del menú nativo | Conservar nuestros valores; aceptar el resto del diff de upstream                                                              |
+| `src/plugins/in-app-menu/renderer/TitleBar.tsx`  | Modo compacto (<720 px), panel vertical, cierre por clic externo en fase de captura, `data-compact`                                       | Mantener el bloque `CompactMenuRenderer` y las señales `isCompact`/`compactOpen`; integrar el resto de los cambios de upstream |
+| `src/plugins/in-app-menu/renderer/PanelItem.tsx` | `min-width: 0`, `overflow: hidden`, `text-overflow: ellipsis`, `white-space: nowrap` en labels                                            | Mantener las cuatro propiedades; son las que evitan filas superpuestas con nombres largos                                      |
+| `src/plugins/in-app-menu/titlebar.css`           | Media query `max-width: 719px` que oculta los `<li>` del titlebar                                                                         | Mantener la query; si upstream cambia el layout del titlebar, revalidar el breakpoint                                          |
+| `src/plugins/music-together/types.ts`            | Avatar SVG local en lugar de `ui-avatars.com`                                                                                             | Conservar `localAvatar()`; no reintroducir la URL externa                                                                      |
+| `electron-builder.yml`                           | `appId`, `productName`, `publish.owner/repo` (`ostinato-music`), targets Linux x64, iconos                                                | Conservar branding y publish; aceptar nuevas dependencias o targets de upstream solo si se prueban                             |
+| `package.json`                                   | `name: ostinato`, `productName`, `desktopName`, repositorio, `author`/`contributors`, versión                                             | Conservar `name` y branding; la versión se decide en el release                                                                |
+| `.gitmodules`                                    | URL del submódulo de letras apunta a nuestro fork                                                                                         | Conservar nuestra URL y el pin con los parches                                                                                 |
+| `extensions-src/better-lyrics-glassy` (gitlink)  | Commit con el fix de diálogos y Unison desactivado                                                                                        | Actualizar solo si los parches del punto 7 siguen aplicando limpio                                                             |
+| `src/changelog.ts`                               | URLs del changelog apuntan a nuestro repo                                                                                                 | Conservar nuestro owner/repo                                                                                                   |
+| `src/plugins/discord/utils.ts`                   | Botón “View App On GitHub” apunta a nuestro repo                                                                                          | Conservar nuestra URL                                                                                                          |
+| `changelog.json`                                 | Entrada propia de Ostinato Music al inicio                                                                                                | Mantenerla arriba y agregar una por release                                                                                    |
+| `.github/workflows/*`                            | `ci.yml`, `release-linux.yml`, `dependency-review.yml`, `reviewdog.yml`                                                                   | Ignorar los workflows de upstream; no volver a agregar `build.yml`, `pr-build-artifacts.yml` ni `issue-triage.yml`             |
+| `docs/*`, `README.md`                            | Documentación del fork                                                                                                                    | Conservar y actualizar cuando cambie el comportamiento                                                                         |
 
 ---
 
@@ -224,23 +227,27 @@ git commit -m "chore: bump better-lyrics-glassy with dialog and Unison patches"
 
 Con la app abierta, redimensionar (o usar Polonium) y comprobar:
 
-| Ancho | Esperado |
-| --- | --- |
-| ≥ 1280 | Layout completo, sidebar visible |
-| 1000–1279 | Sin scroll horizontal; sidebar de YouTube Music según su propio layout |
-| 720–999 | Titlebar completo con los cinco labels |
-| 420–719 | Titlebar compacto: solo hamburguesa; panel y submenús dentro del viewport |
-| < 420 | Bloqueado por `minWidth` (salvo que se desactive el mínimo) |
+| Ancho     | Esperado                                                                  |
+| --------- | ------------------------------------------------------------------------- |
+| ≥ 1280    | Layout completo, sidebar visible                                          |
+| 1000–1279 | Sin scroll horizontal; sidebar de YouTube Music según su propio layout    |
+| 720–999   | Titlebar completo con los cinco labels                                    |
+| 420–719   | Titlebar compacto: solo hamburguesa; panel y submenús dentro del viewport |
+| < 420     | Bloqueado por `minWidth` (salvo que se desactive el mínimo)               |
 
 Comandos rápidos en DevTools:
 
 ```js
 // scroll horizontal
-document.documentElement.scrollWidth > document.documentElement.clientWidth + 2
+document.documentElement.scrollWidth > document.documentElement.clientWidth + 2;
 
 // estado del titlebar
 const nav = document.getElementById('ytmd-title-bar-main-panel');
-({ width: innerWidth, compact: nav.dataset.compact, labels: nav.querySelectorAll(':scope > li').length })
+({
+  width: innerWidth,
+  compact: nav.dataset.compact,
+  labels: nav.querySelectorAll(':scope > li').length,
+});
 ```
 
 En ventanas reales, Polonium puede recolocar la ventana a un tamaño distinto del pedido. Para
@@ -263,6 +270,6 @@ tags no se borran ni se mueven.
 
 ## 10. Registro de sincronizaciones
 
-| Fecha | Upstream | Nuestra versión | Notas |
-| --- | --- | --- | --- |
-| 2026-10-26 | 4.1.1 | 0.1.0 | Fork inicial: mínimo 420×320, titlebar compacto, iconos, avatares locales, Unison desactivado, release Linux |
+| Fecha      | Upstream | Nuestra versión | Notas                                                                                                        |
+| ---------- | -------- | --------------- | ------------------------------------------------------------------------------------------------------------ |
+| 2026-10-26 | 4.1.1    | 0.1.0           | Fork inicial: mínimo 420×320, titlebar compacto, iconos, avatares locales, Unison desactivado, release Linux |
