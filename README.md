@@ -171,7 +171,7 @@ hidden bar.
 
 ### Where are settings stored?
 
-Under Electron's user data directory, normally `~/.config/ostinato` on Linux. The exact
+Under Electron's user data directory, normally `~/.config/Ostinato` on Linux. The exact
 path depends on `XDG_CONFIG_HOME`.
 
 ### How do I update the fork from Glassy Music?

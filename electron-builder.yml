@@ -64,6 +64,7 @@ appImage:
   description: "Ostinato is an adaptive YouTube Music player"
   category: AudioVideo
 deb:
+  afterInstall: build/after-install.tpl
   depends:
     - libgtk-3-0
     - libnotify4
@@ -76,6 +77,7 @@ deb:
     - libasound2
     - libgbm1
 rpm:
+  afterInstall: build/after-install.tpl
   depends:
     - libuuid
   fpm:

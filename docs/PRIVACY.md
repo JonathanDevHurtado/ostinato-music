@@ -116,7 +116,7 @@ confirmar que en reposo **solo** aparecen dominios de YouTube, las tipografías 
 letras y, como mucho, el chequeo de actualización a nuestro GitHub. Reproducir una canción y
 confirmar que no hay peticiones a `unison.betterlyrics.org` ni a `ui-avatars.com`.
 
-Ruta de datos locales en Linux: `~/.config/ostinato` (o `$XDG_CONFIG_HOME/ostinato`). Los
+Ruta de datos locales en Linux: `~/.config/Ostinato` (o `$XDG_CONFIG_HOME/Ostinato`). Los
 dumps de crash, si el sistema los genera, quedan ahí; no se suben.
 
 ---
