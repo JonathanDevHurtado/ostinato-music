@@ -163,12 +163,12 @@ if (is.linux()) {
 
   // Overrides WM_CLASS for X11 to correspond to icon filename
   app.setName(
-    'glassymusic.nankill',
+    'ostinato',
   );
   // for wayland
   app.commandLine.appendSwitch(
     'class',
-    'glassymusic.nankill',
+    'ostinato',
   );
 }
 
@@ -412,7 +412,7 @@ async function createMainWindow() {
     icon,
     width: windowSize.width,
     height: windowSize.height,
-    ...(config.get('options.disableMinSize') ? {} : { minWidth: 1280, minHeight: 720 }),
+    ...(config.get('options.disableMinSize') ? {} : { minWidth: 420, minHeight: 320 }),
     backgroundColor: '#000',
     show: false,
     webPreferences: {
@@ -433,6 +433,27 @@ async function createMainWindow() {
   };
 
   const win = new BrowserWindow(electronWindowSettings);
+
+  // Compact/tiled windows: give the page the full height by hiding the native
+  // menu bar below 720px. The default in-app menu is unaffected; this only
+  // matters when the in-app-menu plugin is disabled. Skipped on macOS (global
+  // menu) and when the user hides the menu.
+  if (!is.macOS() && !config.get('options.hideMenu')) {
+    const COMPACT_MENU_MAX_WIDTH = 720;
+    const syncMenuBarVisibility = () => {
+      if (win.isDestroyed()) return;
+      const compact = win.getSize()[0] < COMPACT_MENU_MAX_WIDTH;
+      win.setAutoHideMenuBar(compact);
+      win.setMenuBarVisibility(!compact);
+    };
+    win.on('resize', syncMenuBarVisibility);
+    win.once('ready-to-show', () => {
+      syncMenuBarVisibility();
+      // The application menu is attached after the window is created, which can
+      // re-show the bar on Linux; re-apply once the startup settles.
+      setTimeout(syncMenuBarVisibility, 1500);
+    });
+  }
 
   trackPictureInPictureWindow(win);
 
@@ -832,7 +853,7 @@ app.whenReady().then(async () => {
   // Register appID on windows
   if (is.windows()) {
     const appID =
-      'glassy-music-nankill';
+      'io.github.jonathandevhurtado.ostinato';
     app.setAppUserModelId(appID);
     const appLocation = process.execPath;
     const appData = app.getPath('appData');
@@ -867,7 +888,7 @@ app.whenReady().then(async () => {
           {
             target: appLocation,
             cwd: path.dirname(appLocation),
-            description: `${APPLICATION_NAME} - Custom mod by NanKill`,
+            description: `${APPLICATION_NAME} - adaptive YouTube Music player`,
             appUserModelId: appID,
           },
         );
@@ -978,7 +999,7 @@ app.whenReady().then(async () => {
       });
 
       const downloadLink =
-        'https://github.com/NanKillBro/glassy-music-nankill/releases/latest';
+        'https://github.com/JonathanDevHurtado/ostinato/releases/latest';
       const dialogOptions: Electron.MessageBoxOptions = {
         type: 'info',
         buttons: [

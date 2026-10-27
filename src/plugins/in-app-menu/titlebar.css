@@ -104,6 +104,14 @@ ytmusic-browse-response .ytmusic-responsive-list-item-renderer {
   contain-intrinsic-size: auto 48px;
 }
 
+/* Compact/tiled windows: the top-level labels collide with the window
+   controls below 720px. The hamburger opens the full menu as a panel. */
+@media (max-width: 719px) {
+  #ytmd-title-bar-main-panel > li {
+    display: none;
+  }
+}
+
 /* fix fullscreen style */
 ytmusic-player[player-ui-state='FULLSCREEN'] {
   margin-top: calc(var(--menu-bar-height, 32px) * -1) !important;

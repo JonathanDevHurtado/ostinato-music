@@ -2,7 +2,7 @@ import i18next, { init, t as i18t, changeLanguage } from 'i18next';
 import { loadLanguageResource } from 'virtual:i18n';
 
 export const APPLICATION_NAME =
-  'Glassy Music';
+  'Ostinato';
 
 const FALLBACK_LANGUAGE = 'en';
 

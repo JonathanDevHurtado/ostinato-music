@@ -1,8 +1,49 @@
 {
   "$schema": "./changelog.schema.json",
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23",
+  "updatedAt": "2026-10-26",
   "entries": [
+    {
+      "version": "0.1.0",
+      "tag": "release",
+      "intro": "First Ostinato release. A fork of Glassy Music focused on tiling-friendly windows, local-first defaults and reproducible Linux builds.",
+      "sections": [
+        {
+          "title": "🪟 Adaptive window",
+          "items": [
+            "The minimum window size is now 420×320 instead of 1280×720, so the player fits tiled and stacked layouts.",
+            "Below 720 px the titlebar labels collapse into a single hamburger menu with every top-level entry.",
+            "The menu panel, submenus and outside-click handling now work at narrow widths without overlapping the window controls."
+          ]
+        },
+        {
+          "title": "🎨 Branding",
+          "items": [
+            "New Ostinato name, icon set, tray icons, desktop entry and window class.",
+            "The app identifier is now `io.github.jonathandevhurtado.ostinato`.",
+            "About, update checks and Discord rich presence point at this repository."
+          ]
+        },
+        {
+          "title": "🔒 Privacy",
+          "items": [
+            "Telemetry audit: no analytics SDKs and no telemetry code in the app or the bundled lyrics extension.",
+            "Music Together avatars are generated locally instead of being requested from `ui-avatars.com`.",
+            "Unison lyrics sharing is disabled in this build.",
+            "Crash dumps stay on disk; remote crash reporting is not configured."
+          ]
+        },
+        {
+          "title": "🐛 Fixes inherited from Glassy Music",
+          "items": [
+            "Fixed dialog backdrops that could remain on top of the page and swallow every click after closing a YouTube Music dialog."
+          ]
+        }
+      ],
+      "footnotes": [
+        "Ostinato is based on [Glassy Music](https://github.com/NanKillBro/glassy-music-nankill), which is based on [Pear Desktop](https://github.com/pear-devs/pear-desktop). GPL-3.0."
+      ]
+    },
     {
       "version": "4.1.1",
       "tag": "release",

@@ -1,0 +1,203 @@
+diff --git a/manifest.json b/manifest.json
+index 13c9e1e5..2f150199 100644
+--- a/manifest.json
++++ b/manifest.json
+@@ -18,18 +18,12 @@
+     "storage",
+     "alarms"
+   ],
+-  "externally_connectable": {
+-    "matches": [
+-      "https://unison.betterlyrics.org/*",
+-      "https://blrcunison.vercel.app/*"
+-    ]
+-  },
+   "optional_permissions": [
+     "downloads"
+   ],
+   "optional_host_permissions": [],
+   "content_security_policy": {
+-    "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com; font-src 'self' data: https://cdn.fontshare.com https://fonts.gstatic.com; img-src 'self' data: https://blrcunison.vercel.app https://boidu.dev https://betterlyrics.org https://raw.githubusercontent.com https://placehold.co; connect-src https://unison.betterlyrics.org https://raw.githubusercontent.com https://api.github.com https://themes.betterlyrics.org; frame-src https://themes.betterlyrics.org;"
++    "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com; font-src 'self' data: https://cdn.fontshare.com https://fonts.gstatic.com; img-src 'self' data: https://boidu.dev https://betterlyrics.org https://raw.githubusercontent.com https://placehold.co; connect-src https://raw.githubusercontent.com https://api.github.com https://themes.betterlyrics.org; frame-src https://themes.betterlyrics.org;"
+   },
+   "options_ui": {
+     "page": "src/options/options.html",
+@@ -50,17 +44,7 @@
+         "images/icons/shaders.png",
+         "*.js.map",
+         "pages/standalone-editor.html",
+-        "pages/marketplace.html",
+-        "pages/unison.html"
+-      ]
+-    },
+-    {
+-      "matches": [
+-        "https://unison.betterlyrics.org/*",
+-        "https://blrcunison.vercel.app/*"
+-      ],
+-      "resources": [
+-        "pages/auth.html"
++        "pages/marketplace.html"
+       ]
+     }
+   ],
+diff --git a/src/core/constants.ts b/src/core/constants.ts
+index 5939603f..d2ed445d 100644
+--- a/src/core/constants.ts
++++ b/src/core/constants.ts
+@@ -425,40 +425,16 @@ interface ProviderConfig {
+ 
+ export const PROVIDER_CONFIGS: ProviderConfig[] = [
+   { key: "bLyrics-richsynced", displayName: "Better Lyrics", syncType: "syllable", priority: 0 },
+-  {
+-    key: "unison-richsynced",
+-    displayName: "Unison",
+-    syncType: "syllable",
+-    priority: 1,
+-  },
+   { key: "binimum-richsynced", displayName: "BiniLyrics", syncType: "syllable", priority: 2 },
+-  {
+-    key: "unison-wordsynced",
+-    displayName: "Unison",
+-    syncType: "word",
+-    priority: 3,
+-  },
+   { key: "portato-richsynced", displayName: "Better Lyrics Portato", syncType: "word", priority: 4 },
+   { key: "musixmatch-richsync", displayName: "Musixmatch", syncType: "word", priority: 5 },
+   { key: "bLyrics-synced", displayName: "Better Lyrics", syncType: "line", priority: 6 },
+-  {
+-    key: "unison-synced",
+-    displayName: "Unison",
+-    syncType: "line",
+-    priority: 7,
+-  },
+   { key: "yt-captions", displayName: "YouTube Captions", syncType: "line", priority: 8 },
+   { key: "binimum-synced", displayName: "BiniLyrics", syncType: "line", priority: 9 },
+   { key: "lrclib-synced", displayName: "LRCLib", syncType: "line", priority: 10 },
+   { key: "legato-synced", displayName: "Better Lyrics Legato", syncType: "line", priority: 11 },
+   { key: "musixmatch-synced", displayName: "Musixmatch", syncType: "line", priority: 12 },
+   { key: "yt-lyrics", displayName: "YouTube", syncType: "unsynced", priority: 13 },
+-  {
+-    key: "unison-plain",
+-    displayName: "Unison",
+-    syncType: "unsynced",
+-    priority: 14,
+-  },
+   { key: "lrclib-plain", displayName: "LRCLib", syncType: "unsynced", priority: 15 },
+ ] as const;
+ 
+diff --git a/src/modules/lyrics/providers/shared.ts b/src/modules/lyrics/providers/shared.ts
+index db178c0b..ddfe6159 100644
+--- a/src/modules/lyrics/providers/shared.ts
++++ b/src/modules/lyrics/providers/shared.ts
+@@ -114,6 +114,17 @@ const defaultPreferredProviderList: LyricSourceKey[] = [...PROVIDER_CONFIGS]
+   .sort((a, b) => a.priority - b.priority)
+   .map(p => p.key) as LyricSourceKey[];
+ 
++// Ostinato: Unison sends a persistent key id plus song metadata to a third
++// party on every lyrics request. It is not opt-in in upstream Better Lyrics,
++// so the fork removes its keys even when an old preferredProviderList still
++// contains them.
++const DISABLED_PROVIDER_KEYS = new Set<string>([
++  "unison-richsynced",
++  "unison-wordsynced",
++  "unison-synced",
++  "unison-plain",
++]);
++
+ function isLyricSourceKey(provider: string): provider is LyricSourceKey {
+   return (LYRIC_SOURCE_KEYS as readonly string[]).includes(provider);
+ }
+@@ -131,7 +142,9 @@ export function initProviders(): void {
+     const stored = preferredProviderList ?? [...defaultPreferredProviderList];
+     const merged = mergePreferredProviders(stored, defaultPreferredProviderList);
+ 
+-    const finalProviderList = merged.filter(isLyricSourceKey);
++    const finalProviderList = merged.filter(
++      (key): key is LyricSourceKey => isLyricSourceKey(key) && !DISABLED_PROVIDER_KEYS.has(key)
++    );
+ 
+     log(PROVIDER_SWITCHED_LOG, finalProviderList);
+     providerPriority = finalProviderList;
+diff --git a/src/options/options.html b/src/options/options.html
+index 6cc8deb7..ca18ce50 100644
+--- a/src/options/options.html
++++ b/src/options/options.html
+@@ -385,10 +385,6 @@
+ 					</svg>
+ 
+ 					__MSG_options_sources_title__
+-					<button class="unison-open-btn" id="open-unison-btn">
+-						<img src="/images/icons/icon-48.png" alt="" width="14" height="14">
+-						__MSG_options_sources_openUnison__
+-					</button>
+ 				</h2>
+ 				<p>
+ 					__MSG_options_sources_description__
+diff --git a/src/options/options.ts b/src/options/options.ts
+index 80bab4fd..7ff3d7f4 100644
+--- a/src/options/options.ts
++++ b/src/options/options.ts
+@@ -262,20 +262,16 @@ const restoreOptions = (): void => {
+     isRomanizationEnabled: false,
+     preferredProviderList: [
+       "bLyrics-richsynced",
+-      "unison-richsynced",
+       "binimum-richsynced",
+-      "unison-wordsynced",
+       "portato-richsynced",
+       "musixmatch-richsync",
+       "yt-captions",
+       "bLyrics-synced",
+-      "unison-synced",
+       "binimum-synced",
+       "lrclib-synced",
+       "legato-synced",
+       "musixmatch-synced",
+       "yt-lyrics",
+-      "unison-plain",
+       "lrclib-plain",
+     ],
+     romanizationDisabledLanguages: [],
+@@ -349,20 +345,16 @@ const setOptionsInForm = (items: Options): void => {
+ 
+   const defaultProviderOrder = [
+     "bLyrics-richsynced",
+-    "unison-richsynced",
+     "binimum-richsynced",
+-    "unison-wordsynced",
+     "portato-richsynced",
+     "musixmatch-richsync",
+     "yt-captions",
+     "bLyrics-synced",
+-    "unison-synced",
+     "binimum-synced",
+     "lrclib-synced",
+     "legato-synced",
+     "musixmatch-synced",
+     "yt-lyrics",
+-    "unison-plain",
+     "lrclib-plain",
+   ];
+ 
+@@ -393,10 +385,6 @@ const getProviderIdToInfoMap = (): { [key: string]: ProviderInfo } => ({
+     name: t("options_provider_musixmatch"),
+     syncType: "line",
+   },
+-  "unison-richsynced": { name: t("options_provider_betterLyricsUnison"), syncType: "syllable" },
+-  "unison-wordsynced": { name: t("options_provider_betterLyricsUnison"), syncType: "word" },
+-  "unison-synced": { name: t("options_provider_betterLyricsUnison"), syncType: "line" },
+-  "unison-plain": { name: t("options_provider_betterLyricsUnison"), syncType: "unsynced" },
+   "yt-captions": {
+     name: t("options_provider_youtubeCaptions"),
+     syncType: "line",
+@@ -650,9 +638,6 @@ document.addEventListener("DOMContentLoaded", () => {
+     openExtensionPage("pages/marketplace.html");
+   });
+ 
+-  document.getElementById("open-unison-btn")?.addEventListener("click", () => {
+-    openExtensionPage("pages/unison.html");
+-  });
+ 
+   initIdentityUI();
+   initNicknameModal();

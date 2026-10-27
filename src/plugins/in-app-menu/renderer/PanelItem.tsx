@@ -61,6 +61,10 @@ const itemLabelStyle = cacheNoArgs(
   () => css`
     font-size: 12px;
     color: white;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   `,
 );
 

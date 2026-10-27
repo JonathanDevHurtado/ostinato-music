@@ -1,208 +1,180 @@
 <div align="center">
 
-# 🕶️ Glassy Music
+# Ostinato
 
-[![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://github.com/NanKillBro/glassy-music-nankill/src/branch/master/LICENSE)
-[![Github Release](https://img.shields.io/github/v/release/NanKillBro/glassy-music-nankill?include_prereleases&label=version&color=orange&style=for-the-badge)](https://github.com/NanKillBro/glassy-music-nankill/releases)
+**A tiling-friendly, local-first YouTube Music desktop player.**
 
-</div>
-
-<div align="center">
-
-**A personalized fork maintained by NanKill**
-
-![Screenshot](web/new.webp "Screenshot")
-
-<p align="center">
-    More screenshots: <a href="web/demo/screenshot.md">here</a>
-</p>
-
-<hr>
-
-### ✨ What makes this version different?
+[![CI](https://github.com/JonathanDevHurtado/ostinato/actions/workflows/ci.yml/badge.svg)](https://github.com/JonathanDevHurtado/ostinato/actions/workflows/ci.yml)
+[![GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/JonathanDevHurtado/ostinato?label=release&color=orange)](https://github.com/JonathanDevHurtado/ostinato/releases)
 
 </div>
 
-Here are the key improvements and features added in this build:
+Ostinato is a fork of [Glassy Music](https://github.com/NanKillBro/glassy-music-nankill),
+which itself is based on [Pear Desktop](https://github.com/pear-devs/pear-desktop). It keeps
+the improved lyrics integration, themes, ad blocking and playback plugins, and adds a UI
+that behaves well in narrow, tiled and stacked windows.
 
-- 🎵 **Better Lyrics Integration:** Added custom themes, bug fixes.
-- 🎨 **Better Lyrics Shader:** Enhanced visual effects with fixes.
-- 🛡️ **Built-in Adblock:** Enjoy music without interruptions.
-- ⏯️ **Non-Stop:** Bypassed the "Video paused. Continue watching?" prompt.
-- 🌶️ **Personal Tweaks:** Added some "extra flavor" and customizations to suit my preferences.
+The name comes from Italian: an *ostinato* is a short melodic pattern repeated over and
+over. It is a nod to the music player part, not to a bug in the shuffle algorithm.
 
----
-### ⚠️ Hardware Recommendation
+## Why this fork?
 
-This version includes heavy visual customization. **It is not recommended for very old or low-end hardware.**
-- **Windows/Linux:** For the best experience at 1080p60, use a device with at least a **4-core CPU** and decent graphics (Intel UHD/Iris Xe or dedicated GPU). Dual-core CPUs may max out system resources.
-- **Mac:** Runs perfectly on Apple Silicon (>M1).
----
+- **Adaptive window.** The minimum size is **420×320**, not 1280×720. The player fits
+  KDE Polonium, Hyprland, Sway and any other tiling setup.
+- **Compact titlebar.** Below **720 px** the five top-level menu labels collapse into one
+  hamburger button. The panel and its submenus stay inside the viewport and close when you
+  click outside them.
+- **No telemetry.** No analytics SDKs, no usage reporting, no remote crash uploads. See
+  [docs/PRIVACY.md](docs/PRIVACY.md).
+- **Local avatars.** Music Together placeholders are generated on the machine instead of
+  being fetched from `ui-avatars.com`.
+- **Linux releases.** Every tag builds AppImage, deb, rpm and tar.gz artifacts on GitHub
+  Actions, including the `latest-linux.yml` file used by the auto-updater.
+- **Upstream-friendly.** Local changes are documented so the fork can merge new Glassy
+  Music releases without losing them. See [docs/UPSTREAM-SYNC.md](docs/UPSTREAM-SYNC.md).
 
-### How to use?
+## Install
 
-- **🚀 Stable Release (Recommended):** You can download the pre-compiled version directly from the **[Releases](https://github.com/NanKillBro/glassy-music-nankill/releases)** page. 
-- **🛠️ Latest Experimental:** You can download the latest automated build artifacts from **[GitHub Actions](https://github.com/NanKillBro/glassy-music-nankill/actions)**, or build it from source yourself by following the [Build](#build) section.
-- **🐧 Arch Linux (AUR):** You can install the experimental package from AUR using `yay` or `paru`: `yay -S glassy-music-nankill-git` (or `paru -S glassy-music-nankill-git`). Note: A stable package is currently unavailable.
+Download the latest **Linux x64** artifact from
+[Releases](https://github.com/JonathanDevHurtado/ostinato/releases):
 
----
+| Format | Use |
+| --- | --- |
+| `Ostinato-*.AppImage` | Portable, `chmod +x` and run |
+| `Ostinato-*.deb` | Debian, Ubuntu, Linux Mint |
+| `Ostinato-*.rpm` | Fedora, openSUSE, RHEL |
+| `Ostinato-*.tar.gz` | Manual install or packaging |
 
-> [!IMPORTANT]
-> ⚠️ Disclaimer
->
-> **No Affiliation**
->
-> This project, and its contributors, are not affiliated with, authorized by, endorsed by, or in any way officially connected with Google LLC, YouTube, or any of their subsidiaries or affiliates. **This is an independent, non-profit, and unofficial extension developed by a team of volunteers with the goal of providing a desktop experience.**
->
-> **Trademarks**
->
-> The names "Google" and "YouTube Music", as well as related names, marks, emblems, and images, are registered trademarks of their respective owners. Any use of these trademarks is for identification and reference purposes only and does not imply any association with the trademark holder. We have no intention of infringing upon these trademarks or causing harm to the trademark holders.
->
-> **Limitation of Liability**
->
-> This application (extension) is provided "AS IS", and you use it at your own risk. In no event shall the developers or contributors be liable for any claim, damages, or other liability, including any legal consequences, arising from, out of, or in connection with the software or the use or other dealings in the software. The responsibility for any and all outcomes of using this software rests entirely with the user.
+The AppImage auto-updater reads `latest-linux.yml` from the same release. Other formats are
+updated by downloading the new package.
 
-> [!NOTE]
-> ### 🛑 Before you use or contribute:
-> 
-> **Built for me, not for everyone (but customizable!):** 
-> This fork's default experience is heavily "opinionated" and built strictly to satisfy my personal
-> visual preferences. My goal is for you to experience the exact visual aesthetic I intended out-of-the-box
-> without needing to configure a single thing. 
-> 
-> However, I know everyone has different tastes, so **support for custom themes is now available!** You can
-> customize the appearance in the settings if you prefer a different look. And as always, if you don't like
-> the hardcoded layout or want to make deeper changes, you are highly encouraged to fork the repo and DIY,
-> as this project is open-source!
-> 
-> If you want to tweak the UI, feel free to open a PR! Just make sure to
-> include some screenshots or a quick video demo so I can see how it looks.
-> I'll review it, and if it matches the vibe I'm going for, I'd love to merge
-> it. If it doesn't quite fit, I'll share my thoughts so we can polish it
-> together, but please don't be discouraged if it doesn't end up making it in.
-> 
-> **Heavy "Vibe Coding" & AI Assistance:** 
-> This project relies heavily on "vibe coding". As a result, the underlying
-> codebase might be unoptimized, and some features may have bugs or break
-> randomly. I spent a lot of time tweaking the AI output to make it work, but
-> the code architecture might not be perfect. Pull Requests to fix bugs,
-> optimize the code, or enhance features are incredibly welcome! Please be
-> kind and constructive with your feedback or criticism.
+Fedora and openSUSE may need `libuuid`; Debian-based distributions pull the GTK, NSS, ALSA
+and GBM runtime dependencies declared by the package.
 
-## Content
+## Adaptive behavior
 
-> [!TIP]
-> **Are you a developer?** 
-> If you are looking for information on how to set up the development environment, test, or create plugins for this project, please check out the **[Developer Guide (dev.md)](dev.md)**!
+| Window width | What changes |
+| --- | --- |
+| ≥ 720 px | Full titlebar with the five top-level menu labels |
+| < 720 px | Hamburger button opens one vertical menu with every top-level entry |
+| 420–475 px | Content still fits; YouTube Music's own sign-in button starts to clip below 420 px |
+| < 420 px | Not reachable by resizing; the minimum window size is 420×320 |
 
-- [Build](#build)
-- [License](#license)
-- [Credits](#credits--acknowledgements)
-- [FAQ](#faq)
+The compact menu is part of the bundled `in-app-menu` plugin. If you disable that plugin,
+Ostinato hides the native menu bar below 720 px as a fallback and leaves it visible on
+wider windows. Press <kbd>Alt</kbd> to show a hidden native menu.
 
-## Build
+You can still disable the minimum size in **Options → Advanced options → Disable Minimum
+Window Size**, but YouTube Music itself is not usable below roughly 420 px.
 
-### Automated Build (Windows Only)
-I provide an automated build script ([`build.bat`](https://github.com/NanKillBro/glassy-music-nankill/blob/master/build.bat)) for Windows that handles everything from A to Z, including checking/installing prerequisites, cloning the repository, installing packages, and compiling the app.
+## Build from source
 
-1. Download the [`build.bat`](https://github.com/NanKillBro/glassy-music-nankill/blob/master/build.bat) file to any folder on your computer.
-2. Double-click `build.bat` to run it. If it prompts for Administrator privileges (required to install missing NodeJS/Git/pnpm), please allow it.
-3. Follow the on-screen prompts to select your build architecture.
-4. Once completed, your compiled app will be located in the `glassy-music-nankill/pack` folder.
+### Requirements
 
-### Manual Build (Linux, macOS, or Windows)
+- Git
+- Node.js 22 or newer
+- pnpm 11 or newer
+- Linux packaging tools: `rpm` for the rpm target, and the usual Electron runtime
+  libraries
 
-#### 🛠️ Prerequisites
-Before you begin, ensure you have the following installed on your system:
-* **[Git](https://git-scm.com/downloads)**: Required to clone the repository.
-* **[Node.js](https://nodejs.org/en/download/)**: Please install the **latest version**. Older versions will likely cause build errors.
-* **[pnpm](https://pnpm.io/installation/)**: Follow this official guide to install `pnpm` globally on your machine.
+### Steps
 
-#### 🚀 Build Steps
-
-1. **Clone the repository and navigate into the project folder:**
 ```bash
-git clone https://github.com/NanKillBro/glassy-music-nankill
-cd glassy-music-nankill
-```
-
-2. **Install dependencies:**
-Run the following command to cleanly install all required packages:
-```bash
+git clone --recurse-submodules https://github.com/JonathanDevHurtado/ostinato.git
+cd ostinato
 pnpm install --frozen-lockfile
+pnpm build
 ```
 
-3. **Build the app for your Operating System:**
-   Run the command that matches your target OS:
-   * `pnpm dist:win` - Windows
-   * `pnpm dist:linux` - Linux (amd64)
-   * `pnpm dist:linux:deb-arm64` - Linux (arm64 for Debian)
-   * `pnpm dist:linux:rpm-arm64` - Linux (arm64 for Fedora)
-   * `pnpm dist:mac` - macOS (amd64)
-   * `pnpm dist:mac:arm64` - macOS (arm64)
+Package only what you need:
 
-Builds the app for macOS, Linux, and Windows, using [electron-builder](https://github.com/electron-userland/electron-builder).
+```bash
+pnpm exec electron-builder --linux AppImage --x64 --publish never
+pnpm exec electron-builder --linux deb rpm tar.gz --x64 --publish never
+```
 
-### Building in devcontainer
+Artifacts are written to `pack/`. For day-to-day development:
 
-1. Clone the repo;
-2. Open the folder in VS Code;
-3. Reopen in container when prompted;
-4. Run `pnpm build` as above (choosing the desired target);
-5. Collect the built files from the `dist` folder.
+```bash
+pnpm dev
+```
 
-Since devcontainer uses a mount for the workspace, the built files will be available on the host system as well.
+The `better-lyrics-glassy` submodule points at
+[JonathanDevHurtado/better-lyrics-glassy](https://github.com/JonathanDevHurtado/better-lyrics-glassy)
+and contains the dialog-backdrop fix described in
+[docs/fix-opened-property.patch](docs/fix-opened-property.patch).
 
-## License
+## Releases
 
-- **GPL-3.0** © [nankill](https://github.com/NanKillBro/glassy-music-nankill)
-- Based on [pear-desktop](https://github.com/pear-devs/pear-desktop) ([MIT © pear-devs](NOTICE))
+Releases are tag-driven:
 
-## Credits / Acknowledgements
+```bash
+# 1. Update the version in package.json and add an entry to changelog.json
+# 2. Commit the release prep
+git tag -a v0.1.0 -m "Ostinato 0.1.0"
+git push origin master
+git push origin v0.1.0
+```
 
-This project is made possible thanks to the amazing work of the open-source community. A huge thank you to the original creators and contributors of the following projects:
+The `Release Linux` workflow checks that the tag matches `package.json`, builds the four
+Linux x64 formats plus `latest-linux.yml`, and publishes a GitHub Release with generated
+notes. If the tag does not match the version, the workflow stops before packaging.
 
-### Core Projects & Features
-* **[Pear Desktop](https://github.com/pear-devs/pear-desktop)**: The incredible base application that this fork is built upon.
-* **[Better Lyrics](https://github.com/better-lyrics/better-lyrics)**: For the fantastic enhanced lyrics integration.
-* **[Better Lyrics Shader](https://github.com/better-lyrics/shaders)**: For the beautiful visual effects and background shaders.
-* **[NonStop+](https://chromewebstore.google.com/detail/youtube-nonstop-ch%E1%BA%B7n-t%E1%BB%B1-%C4%91/fboblaiflnpfojmmnenhacobmckefmlh)**: The underlying logic used to bypass the "Video paused" prompts.
+## Privacy
 
-### Theme Inspirations
-Special thanks to the following creators whose work deeply inspired the **"Merge Theme"**:
-* **[chengggit](https://github.com/chengggit)**: Inspiration from the *Dynamic Background* ([YouTube-Music-Dynamic-Theme](https://github.com/chengggit/YouTube-Music-Dynamic-Theme)).
-* **zobiron**: Inspiration from the *Big Blurry Slow Lyrics for TV* concept.
-* **SKMJi**: Inspiration from the *Luxurious Glass* design.
-* **[tposejank](https://github.com/tposejank)**: Inspiration for the lyrics style from the *[Apple Music theme for Better Lyrics](https://github.com/tposejank/blyrics-am-theme)*.
-* **[WolfTheE](https://github.com/WolfTheE)**: Inspiration from the *[Better-YTM](https://github.com/WolfTheE/better-ytm)* theme.
+The privacy policy is short: the app has no telemetry. Network access is limited to
+YouTube Music, the optional online features you enable (lyrics providers, scrobbling,
+SponsorBlock, translations, theme gallery), the ad-block filter list, and the update check
+against this repository.
 
-## Star History
+Unison, the shared lyrics feature that sends a persistent key identifier to
+`unison.betterlyrics.org`, is disabled in this build. Music Together avatars no longer
+leave the machine. The full inventory is in [docs/PRIVACY.md](docs/PRIVACY.md).
 
-<a href="https://www.star-history.com/?repos=NanKillBro%2Fglassy-music-nankill&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=NanKillBro/glassy-music-nankill&type=date&theme=dark&legend=top-left&sealed_token=5HGmyr2uA5eOfZ9zdc0QjlV5smfWvNfr6P6Dh5P09W-mpO0-deewORk-1PZfFP-0FSHNAp69Irs_COw3XdqpgAezkkRcBSRJ519qaAERmtkw6wrhK-DHyneQggLKF5ANe89AI2LoSiBKfIfJCqlHIoAKGR1e0zXgxsxE26btXiqAVPBShrqK2UU7njkn" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=NanKillBro/glassy-music-nankill&type=date&legend=top-left&sealed_token=5HGmyr2uA5eOfZ9zdc0QjlV5smfWvNfr6P6Dh5P09W-mpO0-deewORk-1PZfFP-0FSHNAp69Irs_COw3XdqpgAezkkRcBSRJ519qaAERmtkw6wrhK-DHyneQggLKF5ANe89AI2LoSiBKfIfJCqlHIoAKGR1e0zXgxsxE26btXiqAVPBShrqK2UU7njkn" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=NanKillBro/glassy-music-nankill&type=date&legend=top-left&sealed_token=5HGmyr2uA5eOfZ9zdc0QjlV5smfWvNfr6P6Dh5P09W-mpO0-deewORk-1PZfFP-0FSHNAp69Irs_COw3XdqpgAezkkRcBSRJ519qaAERmtkw6wrhK-DHyneQggLKF5ANe89AI2LoSiBKfIfJCqlHIoAKGR1e0zXgxsxE26btXiqAVPBShrqK2UU7njkn" />
- </picture>
-</a>
+## License and credits
+
+- **GPL-3.0** for this fork. See [LICENSE](LICENSE).
+- Original Glassy Music by [nankill](https://github.com/NanKillBro/glassy-music-nankill).
+- Based on [Pear Desktop](https://github.com/pear-devs/pear-desktop), MIT, copyright
+  pear-devs. See [NOTICE](NOTICE).
+- [Better Lyrics](https://github.com/better-lyrics/better-lyrics) and
+  [Better Lyrics Shaders](https://github.com/better-lyrics/shaders) provide the lyrics and
+  visual effects bundled here.
+- Theme inspiration: [chengggit](https://github.com/chengggit), zobiron, SKMJi,
+  [tposejank](https://github.com/tposejank) and
+  [WolfTheE](https://github.com/WolfTheE).
+
+Ostinato is an independent, non-profit project. It is not affiliated with, endorsed by or
+connected to Google LLC, YouTube, or any of their subsidiaries. “Google”, “YouTube” and
+“YouTube Music” are trademarks of their respective owners. The software is provided “as
+is”, without warranty of any kind; you use it at your own risk.
 
 ## FAQ
 
-### Why isn't the app menu showing up?
+### The menu labels disappeared
 
-If the `Hide Menu` option is on, you can show the menu by pressing the <kbd>Alt</kbd> key (or <kbd>\`</kbd> [backtick] if you're using the in-app-menu plugin).
+You are below 720 px. Click the hamburger button on the left. The panel contains the same
+entries as the wide titlebar.
 
-### Why is the minimum window size locked at 1280x720?
-This app isn't designed for small screen or mobile window sizes, so it's locked at 1280x720 by default. If you'd like to turn this off, go to **Options** → **Advanced options** → **Disable Minimum Window Size**.
+### Why is the minimum size 420×320?
 
-### Why is performance poor?
-Ngl, I feel it too! But there isn't an easy way to optimize it further right now. It shouldn't be a problem if you have a decent PC, but if your system is on the lower end, you might experience some lag.
+YouTube Music's own layout stops fitting below roughly 420 px: the sign-in button and the
+right side of the navigation bar are clipped. 420 is the smallest width where the navigation
+bar still works without horizontal scrolling.
 
-### What is the update schedule?
-I update the app in my free time or whenever necessary. Generally, expect about one update per month (sometimes two!).
+### Can I still use the native menu?
 
-### Can I customize it?
-Yes, absolutely! You can already change fonts or add custom CSS directly in the Better Lyrics settings.
+Yes. Disable the `in-app-menu` plugin. Ostinato then hides the native bar below 720 px to
+save vertical space and restores it when the window grows. Press <kbd>Alt</kbd> to reveal a
+hidden bar.
 
-### Why is the artwork low quality, or why does no media appear to be playing in MPRIS?
-You just need to enable the "Shortcuts (& MPRIS)" plugin. That should do the trick!
+### Where are settings stored?
+
+Under Electron's user data directory, normally `~/.config/ostinato` on Linux. The exact
+path depends on `XDG_CONFIG_HOME`.
+
+### How do I update the fork from Glassy Music?
+
+Follow [docs/UPSTREAM-SYNC.md](docs/UPSTREAM-SYNC.md). It lists the files that carry local
+changes, the submodule pin, and the checks to run before tagging a release.

@@ -1,9 +1,9 @@
-appId: "glassy-music-nankill"
-productName: "Glassy Music"
+appId: "io.github.jonathandevhurtado.ostinato"
+productName: "Ostinato"
 publish:
   provider: github
-  owner: NanKillBro
-  repo: glassy-music-nankill
+  owner: JonathanDevHurtado
+  repo: ostinato
 files:
   - '!*'
   - dist
@@ -42,7 +42,7 @@ linux:
   syncDesktopName: true
   desktop:
     entry:
-      StartupWMClass: "glassymusic.nankill"
+      StartupWMClass: "ostinato"
   target:
     - target: AppImage
       arch:
@@ -61,7 +61,7 @@ linux:
         - x64
         - arm64
 appImage:
-  description: "Glassy Music is extension for music player "
+  description: "Ostinato is an adaptive YouTube Music player"
   category: AudioVideo
 deb:
   depends:

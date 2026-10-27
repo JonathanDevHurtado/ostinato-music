@@ -1,10 +1,10 @@
 # Privacidad y red
 
-Política del fork: **cero telemetría**. Nada de analítica, nada de reportes de uso, nada de
-identificadores. Este documento inventaría qué sale a la red, cuándo y por qué, para poder
-auditarlo en cada actualización de upstream.
+Política de Ostinato: **cero telemetría**. Nada de analítica, nada de reportes de uso, nada de
+identificadores enviados a nuestros servidores. Este documento inventaría qué sale a la red,
+cuándo y por qué, para poder auditarlo en cada actualización de upstream.
 
-Última auditoría: **2026-10-26**, sobre Glassy Music 4.1.1.
+Última auditoría: **2026-10-26**, sobre Ostinato 0.1.0 (base Glassy Music 4.1.1).
 
 ---
 
@@ -16,51 +16,77 @@ auditarlo en cada actualización de upstream.
 | Código de telemetría en la app (`src/`) | **Ninguno** |
 | Código de telemetría en la extensión de letras | **Ninguno** |
 | Permisos de la extensión | `storage`, `alarms`, host `*://music.youtube.com/*` |
-| Reporte de crashes a un servidor | **No configurado** (`crashReporter` no se inicia; los dumps quedan locales en `~/.config/Glassy Music/Crashpad`) |
-| Identificadores de usuario enviados | **Ninguno** |
+| Reporte de crashes a un servidor | **No configurado**; no se inicia `crashReporter` |
+| Identificadores de usuario enviados | **Ninguno** a servidores del proyecto |
+| Unison (letras compartidas) | **Desactivado**: eliminado de la lista de proveedores y bloqueado en `providerPriority` |
+| Avatares de Music Together | **Locales** (SVG generado en el cliente) |
 
-Conclusión: la app base **no envía telemetría**. El riesgo real está en endpoints de
-funciones opcionales y en el auto-actualizador, que en un fork apuntaría al repo equivocado.
+Conclusión: la app no envía telemetría. El riesgo real está en las funciones opcionales que
+salen a terceros (letras, scrobbling, traducción, SponsorBlock) y en el auto-actualizador.
 
 ---
 
 ## 2. Inventario de red
 
+### 2.1 Núcleo de la app
+
 | Destino | Cuándo se usa | Qué envía | Estado en el fork |
 | --- | --- | --- | --- |
-| `api.github.com` / `github.com/NanKillBro/...` | Auto-update, 2 s tras arrancar, solo si `autoUpdates` está activo | Petición de versión; sin datos de usuario | **Repuntar a nuestro repo** |
-| `raw.githubusercontent.com/.../changelog.json` + `cdn.jsdelivr.net` | Al abrir "Acerca de" o al detectar update | Nada (GET de un JSON público) | Repuntar o dejar; sin datos |
-| `zoundhub.com/api/artists/all` | Plugin *Skip AI Music* con lista comunitaria (desactivado por defecto) | GET; no envía tu biblioteca | Mantener desactivado por defecto |
-| `unison.betterlyrics.org`, `blrcunison.vercel.app`, `unison.boidu.dev` | Letras compartidas ("Unison"), función opcional | Nickname y sala al usarla | **Eliminar del build** |
-| `themes.betterlyrics.org`, `raw.githubusercontent.com/better-lyrics/themes` | Galería de temas, solo al abrirla | GET | Mantener (acción explícita) |
-| `translate.googleapis.com` | Traducción de letras, si se activa | Texto de la letra a traducir | Mantener (opt-in) |
-| `ws.audioscrobbler.com`, `api.listenbrainz.org` | Scrobbler, solo si configuras cuenta | Historial de escucha | Mantener (opt-in explícito) |
-| `sponsor.ajay.app` | Plugin SponsorBlock | Hash de segmentos | Mantener (opt-in) |
-| `raw.githubusercontent.com/uBlockOrigin/...` | Listas de filtros del adblocker | GET | Mantener |
-| `models.betterlyrics.org` | Descarga de modelos de letras | GET | Mantener (opt-in) |
-| `ui-avatars.com/api/?name=<nick>` | Plugin *Music Together* | **Tu nickname en la URL de un tercero** | **Sustituir por avatar local** |
-| `127.0.0.1` | Proxy local opcional (auth-proxy) | Nada externo | Mantener |
+| `api.github.com` / `github.com/JonathanDevHurtado/ostinato` | Auto-update, poco después de arrancar, solo si `autoUpdates` está activo | Petición de versión; sin datos de usuario | Apunta a nuestro repo |
+| `raw.githubusercontent.com/JonathanDevHurtado/ostinato/master/changelog.json` + `cdn.jsdelivr.net` | Al abrir “Acerca de” o al detectar una actualización | GET de un JSON público | Apunta a nuestro repo |
+| `music.youtube.com`, `i.ytimg.com`, `googlevideo.com`, `accounts.google.com` | Contenido y sesión de YouTube Music | Tráfico normal de la web de YouTube Music | Inevitable |
+| `127.0.0.1` | Proxy local opcional del plugin `auth-proxy` | Nada externo | Mantener |
+| Socket local de Discord | Rich Presence, si está activado | Título/artista de la canción | Local, sin red |
 
-Notas:
+### 2.2 Letras (Better Lyrics)
 
-- Los dumps de crash son **locales**; no hay `uploadToServer`.
-- Las peticiones a YouTube (`music.youtube.com`, `ytimg`, `googlevideo`) son el contenido
-  de la app y no se pueden eliminar.
-- OAuth de Last.fm/ListenBrainz solo ocurre si el usuario conecta la cuenta.
+Los proveedores por defecto consultan varios servicios públicos al cargar una canción. No
+envían tu historial ni tu cuenta, pero sí el título/artista/duración de la canción que estás
+viendo.
+
+| Destino | Proveedor | Estado |
+| --- | --- | --- |
+| `rics.betterlyrics.org` | Better Lyrics (rich sync) | Activo por defecto |
+| `lyrics-api.binimum.org` | BiniLyrics | Activo por defecto |
+| `lyrics.api.dacubeking.com` | Cubey / Portato / Legato | Activo por defecto |
+| `lrclib.net` | LRCLib | Activo por defecto |
+| `www.musixmatch.com` | Musixmatch | Activo por defecto |
+| `unison.betterlyrics.org`, `unison.boidu.dev`, `blrcunison.vercel.app` | Unison | **Desactivado en el build** |
+| `translate.googleapis.com` | Traducción de letras | Solo si se activa |
+| `themes.betterlyrics.org`, `raw.githubusercontent.com/better-lyrics/themes` | Galería de temas | Solo al abrirla |
+| `models.betterlyrics.org` | Descarga de modelos de letras | Solo si se activa |
+| `api.fontshare.com`, `fonts.googleapis.com`, `fonts.gstatic.com` | Tipografías usadas por la interfaz de letras | Se piden al cargar la UI de letras |
+| `placehold.co` | Imágenes de respaldo de temas | Solo si un tema las usa |
+
+### 2.3 Funciones opcionales
+
+| Destino | Función | Qué envía |
+| --- | --- | --- |
+| `ws.audioscrobbler.com`, `api.listenbrainz.org` | Scrobbler | Historial de escucha, solo si conectas la cuenta |
+| `sponsor.ajay.app` | SponsorBlock | Hash de segmentos del video |
+| `zoundhub.com/api/artists/all` | Skip AI Music (desactivado por defecto) | GET de una lista comunitaria; no envía tu biblioteca |
+| `raw.githubusercontent.com/uBlockOrigin/...` | Listas de filtros del adblocker | GET |
+
+### 2.4 Lo que ya no sale
+
+| Antes | Ahora |
+| --- | --- |
+| `ui-avatars.com/api/?name=<nick>` en Music Together | SVG generado localmente con iniciales y un color derivado del nombre |
+| `unison.betterlyrics.org` con `x-key-id` en cada carga de letras | Proveedor eliminado de la lista por defecto y filtrado aunque una configuración vieja lo conserve |
 
 ---
 
 ## 3. Cambios obligatorios en el fork
 
 1. **Auto-update**: `electron-builder.yml` → `publish.owner: JonathanDevHurtado`,
-   `publish.repo: glassy-music-nankill`. El `app-update.yml` generado apuntará al fork.
-   Cambiar también el `downloadLink` hardcodeado en `src/index.ts`.
-2. **Unison**: quitar `unison.*` de `externally_connectable` y de la lista de hosts de la
-   extensión, o bloquearlo en `src/plugins/better-lyrics/index.ts`.
-3. **Avatares**: reemplazar `ui-avatars.com` por un SVG generado en local (iniciales +
-   color derivado del nombre).
-4. **Sin telemetría nueva**: cualquier PR de upstream que agregue analítica se rechaza en
-   el merge (ver `docs/UPSTREAM-SYNC.md`, tabla de archivos críticos).
+   `publish.repo: ostinato`. El `app-update.yml` generado apunta al fork. El enlace de
+   descarga manual en `src/index.ts` también.
+2. **Unison**: eliminado de `PROVIDER_CONFIGS`, filtrado en `providerPriority` y retirado de
+   `externally_connectable` en el submódulo `better-lyrics-glassy`. Ver
+   `docs/disable-unison.patch`.
+3. **Avatares**: `src/plugins/music-together/types.ts` genera el SVG en local.
+4. **Sin telemetría nueva**: cualquier PR de upstream que agregue analítica se rechaza en el
+   merge (ver `docs/UPSTREAM-SYNC.md`, tabla de archivos críticos).
 
 ---
 
@@ -70,24 +96,33 @@ Notas:
 # 1. Sin SDKs de analítica
 grep -riE "sentry|posthog|mixpanel|amplitude|segment|gtag|sendBeacon" src/ | grep -v node_modules
 
-# 2. Inventario de hosts
-grep -rhoE "https://[a-zA-Z0-9._-]+" src/ extensions/ | sort -u
+# 2. Sin Unison en la app ni en el submódulo
+grep -rn "unison" src/ extensions-src/better-lyrics-glassy/src/modules/lyrics/providers/ \
+  extensions-src/better-lyrics-glassy/manifest.json | grep -v selfcheck | grep -v "Dock\|dock\|position"
+grep -rn "unison" extensions/bl/manifest.json || true
 
-# 3. Permisos de la extensión
-python3 -c "import json;m=json.load(open('extensions/bl/manifest.json'));print(m['permissions'], m['host_permissions'])"
+# 3. Sin el avatar externo
+grep -rn "ui-avatars" src/ extensions/ || echo "sin ui-avatars"
 
 # 4. Auto-update apunta al fork
 grep -n "owner\|repo" electron-builder.yml
+
+# 5. Versión del changelog
+grep -n "JonathanDevHurtado" src/changelog.ts
 ```
 
 Comprobación en caliente (con la app abierta): DevTools → Network, filtrar por dominio y
-confirmar que en reposo **solo** aparecen dominios de YouTube y, como mucho, el chequeo de
-actualización a nuestro GitHub.
+confirmar que en reposo **solo** aparecen dominios de YouTube, las tipografías de la UI de
+letras y, como mucho, el chequeo de actualización a nuestro GitHub. Reproducir una canción y
+confirmar que no hay peticiones a `unison.betterlyrics.org` ni a `ui-avatars.com`.
+
+Ruta de datos locales en Linux: `~/.config/ostinato` (o `$XDG_CONFIG_HOME/ostinato`). Los
+dumps de crash, si el sistema los genera, quedan ahí; no se suben.
 
 ---
 
 ## 5. Compromiso
 
-- No se agrega analítica, ni "anonymous usage stats", ni crash reporting remoto.
+- No se agrega analítica, ni “anonymous usage stats”, ni crash reporting remoto.
 - Toda función que salga a un tercero debe ser **opt-in** y estar listada en la tabla.
 - Si upstream agrega un endpoint nuevo, se documenta aquí **antes** de publicar release.

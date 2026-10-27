@@ -231,6 +231,71 @@ const PanelRenderer = (props: PanelRendererProps) => {
   );
 };
 
+const COMPACT_BREAKPOINT = 720;
+
+/**
+ * The regular titlebar only fits five labels next to the window controls when
+ * the window is wide. Below that breakpoint the labels are hidden and the
+ * hamburger opens this single vertical panel with every top-level menu.
+ */
+const CompactMenuRenderer = (props: {
+  items: Electron.Menu['items'];
+  onClick: (commandId: number, radioGroup?: MenuItem[]) => void;
+  onClose: () => void;
+}) => {
+  const radioGroup = () => props.items.filter((it) => it.type === 'radio');
+
+  return (
+    <Index each={props.items}>
+      {(item) => (
+        <Show when={item().visible}>
+          <Switch>
+            <Match when={item().type === 'separator'}>
+              <hr class={separatorStyle()} />
+            </Match>
+            <Match when={item().submenu}>
+              <PanelItem
+                level={[item().commandId]}
+                name={item().label}
+                type={'submenu'}
+              >
+                <PanelRenderer
+                  items={item().submenu?.items ?? []}
+                  onClick={(commandId, group) => props.onClick(commandId, group)}
+                />
+              </PanelItem>
+            </Match>
+            <Match when={item().type === 'checkbox' || item().type === 'radio'}>
+              <PanelItem
+                checked={item().checked === true}
+                name={item().label}
+                onChange={() => {
+                  props.onClick(
+                    item().commandId,
+                    item().type === 'radio' ? radioGroup() : undefined,
+                  );
+                  props.onClose();
+                }}
+                type={item().type === 'checkbox' ? 'checkbox' : 'radio'}
+              />
+            </Match>
+            <Match when={true}>
+              <PanelItem
+                name={item().label}
+                onClick={() => {
+                  props.onClick(item().commandId);
+                  props.onClose();
+                }}
+                type={'normal'}
+              />
+            </Match>
+          </Switch>
+        </Show>
+      )}
+    </Index>
+  );
+};
+
 export type TitleBarProps = {
   ipc: RendererContext<InAppMenuConfig>['ipc'];
   isMacOS?: boolean;
@@ -239,6 +304,13 @@ export type TitleBarProps = {
 };
 export const TitleBar = (props: TitleBarProps) => {
   const [collapsed, setCollapsed] = createSignal(props.initialCollapsed);
+  const [isCompact, setIsCompact] = createSignal(
+    typeof window !== 'undefined' && window.innerWidth < COMPACT_BREAKPOINT,
+  );
+  const [compactOpen, setCompactOpen] = createSignal(false);
+  const [compactAnchor, setCompactAnchor] = createSignal<HTMLElement | null>(
+    null,
+  );
   const [ignoreTransition, setIgnoreTransition] = createSignal(false);
   const [openTarget, setOpenTarget] = createSignal<HTMLElement | null>(null);
   const [menu, setMenu] = createSignal<Menu | null>(null);
@@ -343,7 +415,9 @@ export const TitleBar = (props: TitleBarProps) => {
     props.ipc.on('window-maximize', refetchMaximize);
     props.ipc.on('window-unmaximize', refetchMaximize);
 
-    // close menu when the outside of the panel or sub-panel is clicked
+    // close menu when the outside of the panel or sub-panel is clicked.
+    // Capture phase: YouTube Music stops propagation on some of its own
+    // surfaces, which would otherwise leave the panel open.
     document.body.addEventListener('click', (e) => {
       if (
         e.target instanceof HTMLElement &&
@@ -353,8 +427,18 @@ export const TitleBar = (props: TitleBarProps) => {
         )
       ) {
         setOpenTarget(null);
+        setCompactOpen(false);
       }
-    });
+    }, true);
+
+    const syncCompact = () => {
+      const compact = window.innerWidth < COMPACT_BREAKPOINT;
+      setIsCompact(compact);
+      if (!compact) setCompactOpen(false);
+    };
+    syncCompact();
+    window.addEventListener('resize', syncCompact);
+    onCleanup(() => window.removeEventListener('resize', syncCompact));
 
     // tracking mouse position
     window.addEventListener('mousemove', listener);
@@ -403,13 +487,22 @@ export const TitleBar = (props: TitleBarProps) => {
       <div class={topDragAreaStyle()} />
       <nav
         class={titleStyle()}
+        data-compact={isCompact()}
         data-macos={props.isMacOS}
         data-show={mouseY() < 32}
         data-ytmd-main-panel={true}
         id={'ytmd-title-bar-main-panel'}
+        ref={setCompactAnchor}
       >
         <IconButton
-          onClick={() => setCollapsed(!collapsed())}
+          onClick={() => {
+            if (isCompact()) {
+              setOpenTarget(null);
+              setCompactOpen(!compactOpen());
+            } else {
+              setCollapsed(!collapsed());
+            }
+          }}
           style={{
             'border-top-left-radius': '4px',
           }}
@@ -421,7 +514,20 @@ export const TitleBar = (props: TitleBarProps) => {
             />
           </svg>
         </IconButton>
-        <TransitionGroup
+        <Panel
+          anchor={compactAnchor()}
+          offset={{ mainAxis: 8 }}
+          open={isCompact() && compactOpen()}
+          placement={'bottom-start'}
+        >
+          <CompactMenuRenderer
+            items={menu()?.items ?? []}
+            onClick={handleItemClick}
+            onClose={() => setCompactOpen(false)}
+          />
+        </Panel>
+        <Show when={!isCompact()}>
+          <TransitionGroup
           enterActiveClass={
             ignoreTransition()
               ? animationStyle().fake
@@ -507,6 +613,7 @@ export const TitleBar = (props: TitleBarProps) => {
             </Index>
           </Show>
         </TransitionGroup>
+        </Show>
       </nav>
       <Show when={props.enableController}>
         <div class={windowControlContainerStyle()} data-show={mouseY() < 32}>
