@@ -1,7 +1,7 @@
 {
   "name": "ostinato",
   "version": "0.1.0",
-  "description": "Ostinato: adaptive fork of Glassy Music for YouTube Music",
+  "description": "Ostinato Music: adaptive fork of Glassy Music for YouTube Music",
   "homepage": "https://github.com/JonathanDevHurtado/ostinato",
   "license": "GPL-3.0",
   "author": {
@@ -179,5 +179,5 @@
     "pnpm": ">=11"
   },
   "desktopName": "ostinato",
-  "productName": "Ostinato"
+  "productName": "Ostinato Music"
 }

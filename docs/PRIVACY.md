@@ -1,10 +1,10 @@
 # Privacidad y red
 
-Política de Ostinato: **cero telemetría**. Nada de analítica, nada de reportes de uso, nada de
+Política de Ostinato Music: **cero telemetría**. Nada de analítica, nada de reportes de uso, nada de
 identificadores enviados a nuestros servidores. Este documento inventaría qué sale a la red,
 cuándo y por qué, para poder auditarlo en cada actualización de upstream.
 
-Última auditoría: **2026-10-26**, sobre Ostinato 0.1.0 (base Glassy Music 4.1.1).
+Última auditoría: **2026-10-26**, sobre Ostinato Music 0.1.0 (base Glassy Music 4.1.1).
 
 ---
 
@@ -116,7 +116,7 @@ confirmar que en reposo **solo** aparecen dominios de YouTube, las tipografías 
 letras y, como mucho, el chequeo de actualización a nuestro GitHub. Reproducir una canción y
 confirmar que no hay peticiones a `unison.betterlyrics.org` ni a `ui-avatars.com`.
 
-Ruta de datos locales en Linux: `~/.config/Ostinato` (o `$XDG_CONFIG_HOME/Ostinato`). Los
+Ruta de datos locales en Linux: `~/.config/Ostinato Music` (o `$XDG_CONFIG_HOME/Ostinato Music`). Los
 dumps de crash, si el sistema los genera, quedan ahí; no se suben.
 
 ---

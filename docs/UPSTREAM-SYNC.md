@@ -1,4 +1,4 @@
-# Actualizar Ostinato desde Glassy Music
+# Actualizar Ostinato Music desde Glassy Music
 
 Runbook para sincronizar este fork con `NanKillBro/glassy-music-nankill` sin perder los
 cambios propios. Pensado para ejecutarse en cada release de upstream o, como mínimo, una vez
@@ -121,7 +121,7 @@ git merge --no-ff sync/upstream-<version>
 ```bash
 # 1. Subir la versión en package.json y agregar la entrada en changelog.json
 # 2. Commit de preparación
-git tag -a v<version> -m "Ostinato <version>"
+git tag -a v<version> -m "Ostinato Music <version>"
 git push origin master
 git push origin v<version>
 ```
@@ -150,7 +150,7 @@ localmente con `pnpm dist:mac` / `pnpm dist:win`; no hay workflow que los suba.
 | `extensions-src/better-lyrics-glassy` (gitlink) | Commit con el fix de diálogos y Unison desactivado | Actualizar solo si los parches del punto 7 siguen aplicando limpio |
 | `src/changelog.ts` | URLs del changelog apuntan a nuestro repo | Conservar nuestro owner/repo |
 | `src/plugins/discord/utils.ts` | Botón “View App On GitHub” apunta a nuestro repo | Conservar nuestra URL |
-| `changelog.json` | Entrada propia de Ostinato al inicio | Mantenerla arriba y agregar una por release |
+| `changelog.json` | Entrada propia de Ostinato Music al inicio | Mantenerla arriba y agregar una por release |
 | `.github/workflows/*` | `ci.yml`, `release-linux.yml`, `dependency-review.yml`, `reviewdog.yml` | Ignorar los workflows de upstream; no volver a agregar `build.yml`, `pr-build-artifacts.yml` ni `issue-triage.yml` |
 | `docs/*`, `README.md` | Documentación del fork | Conservar y actualizar cuando cambie el comportamiento |
 
@@ -188,7 +188,7 @@ Criterio de aceptación, en cualquier versión futura:
 
 Unison envía `x-key-id` (un identificador persistente generado en el cliente) y los datos
 de la canción a `unison.betterlyrics.org` en cada carga de letras. Está en la lista de
-proveedores por defecto de Better Lyrics. En Ostinato se elimina de la lista de proveedores
+proveedores por defecto de Better Lyrics. En Ostinato Music se elimina de la lista de proveedores
 y se bloquea aunque una configuración vieja lo tenga guardado.
 
 Después de actualizar el submódulo:

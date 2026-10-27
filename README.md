@@ -1,6 +1,6 @@
 <div align="center">
 
-# Ostinato
+# Ostinato Music
 
 **A tiling-friendly, local-first YouTube Music desktop player.**
 
@@ -10,7 +10,7 @@
 
 </div>
 
-Ostinato is a fork of [Glassy Music](https://github.com/NanKillBro/glassy-music-nankill),
+Ostinato Music is a fork of [Glassy Music](https://github.com/NanKillBro/glassy-music-nankill),
 which itself is based on [Pear Desktop](https://github.com/pear-devs/pear-desktop). It keeps
 the improved lyrics integration, themes, ad blocking and playback plugins, and adds a UI
 that behaves well in narrow, tiled and stacked windows.
@@ -41,10 +41,10 @@ Download the latest **Linux x64** artifact from
 
 | Format | Use |
 | --- | --- |
-| `Ostinato-*.AppImage` | Portable, `chmod +x` and run |
-| `Ostinato-*.deb` | Debian, Ubuntu, Linux Mint |
-| `Ostinato-*.rpm` | Fedora, openSUSE, RHEL |
-| `Ostinato-*.tar.gz` | Manual install or packaging |
+| `Ostinato-Music-*.AppImage` | Portable, `chmod +x` and run |
+| `ostinato_*.deb` | Debian, Ubuntu, Linux Mint |
+| `ostinato-*.rpm` | Fedora, openSUSE, RHEL |
+| `ostinato-*.tar.gz` | Manual install or packaging |
 
 The AppImage auto-updater reads `latest-linux.yml` from the same release. Other formats are
 updated by downloading the new package.
@@ -62,7 +62,7 @@ and GBM runtime dependencies declared by the package.
 | < 420 px | Not reachable by resizing; the minimum window size is 420×320 |
 
 The compact menu is part of the bundled `in-app-menu` plugin. If you disable that plugin,
-Ostinato hides the native menu bar below 720 px as a fallback and leaves it visible on
+Ostinato Music hides the native menu bar below 720 px as a fallback and leaves it visible on
 wider windows. Press <kbd>Alt</kbd> to show a hidden native menu.
 
 You can still disable the minimum size in **Options → Advanced options → Disable Minimum
@@ -112,7 +112,7 @@ Releases are tag-driven:
 ```bash
 # 1. Update the version in package.json and add an entry to changelog.json
 # 2. Commit the release prep
-git tag -a v0.1.0 -m "Ostinato 0.1.0"
+git tag -a v0.1.0 -m "Ostinato Music 0.1.0"
 git push origin master
 git push origin v0.1.0
 ```
@@ -145,7 +145,7 @@ leave the machine. The full inventory is in [docs/PRIVACY.md](docs/PRIVACY.md).
   [tposejank](https://github.com/tposejank) and
   [WolfTheE](https://github.com/WolfTheE).
 
-Ostinato is an independent, non-profit project. It is not affiliated with, endorsed by or
+Ostinato Music is an independent, non-profit project. It is not affiliated with, endorsed by or
 connected to Google LLC, YouTube, or any of their subsidiaries. “Google”, “YouTube” and
 “YouTube Music” are trademarks of their respective owners. The software is provided “as
 is”, without warranty of any kind; you use it at your own risk.
@@ -165,13 +165,13 @@ bar still works without horizontal scrolling.
 
 ### Can I still use the native menu?
 
-Yes. Disable the `in-app-menu` plugin. Ostinato then hides the native bar below 720 px to
+Yes. Disable the `in-app-menu` plugin. Ostinato Music then hides the native bar below 720 px to
 save vertical space and restores it when the window grows. Press <kbd>Alt</kbd> to reveal a
 hidden bar.
 
 ### Where are settings stored?
 
-Under Electron's user data directory, normally `~/.config/Ostinato` on Linux. The exact
+Under Electron's user data directory, normally `~/.config/Ostinato Music` on Linux. The exact
 path depends on `XDG_CONFIG_HOME`.
 
 ### How do I update the fork from Glassy Music?

@@ -116,7 +116,7 @@ export const openAboutWindow = (parentWin?: BrowserWindow) => {
     width: 600,
     height: 700,
     resizable: false,
-    title: 'About Ostinato',
+    title: 'About Ostinato Music',
     minimizable: false,
     maximizable: false,
     autoHideMenuBar: true,

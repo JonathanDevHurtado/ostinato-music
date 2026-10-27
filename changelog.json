@@ -6,7 +6,7 @@
     {
       "version": "0.1.0",
       "tag": "release",
-      "intro": "First Ostinato release. A fork of Glassy Music focused on tiling-friendly windows, local-first defaults and reproducible Linux builds.",
+      "intro": "First Ostinato Music release. A fork of Glassy Music focused on tiling-friendly windows, local-first defaults and reproducible Linux builds.",
       "sections": [
         {
           "title": "🪟 Adaptive window",
@@ -19,7 +19,7 @@
         {
           "title": "🎨 Branding",
           "items": [
-            "New Ostinato name, icon set, tray icons, desktop entry and window class.",
+            "New Ostinato Music name, icon set, tray icons, desktop entry and window class.",
             "The app identifier is now `io.github.jonathandevhurtado.ostinato`.",
             "About, update checks and Discord rich presence point at this repository."
           ]
@@ -41,7 +41,7 @@
         }
       ],
       "footnotes": [
-        "Ostinato is based on [Glassy Music](https://github.com/NanKillBro/glassy-music-nankill), which is based on [Pear Desktop](https://github.com/pear-devs/pear-desktop). GPL-3.0."
+        "Ostinato Music is based on [Glassy Music](https://github.com/NanKillBro/glassy-music-nankill), which is based on [Pear Desktop](https://github.com/pear-devs/pear-desktop). GPL-3.0."
       ]
     },
     {

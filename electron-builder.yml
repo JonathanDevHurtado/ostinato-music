@@ -1,5 +1,5 @@
 appId: "io.github.jonathandevhurtado.ostinato"
-productName: "Ostinato"
+productName: "Ostinato Music"
 publish:
   provider: github
   owner: JonathanDevHurtado
@@ -61,7 +61,8 @@ linux:
         - x64
         - arm64
 appImage:
-  description: "Ostinato is an adaptive YouTube Music player"
+  artifactName: "Ostinato-Music-${version}.${ext}"
+  description: "Ostinato Music is an adaptive YouTube Music player"
   category: AudioVideo
 deb:
   afterInstall: build/after-install.tpl
