@@ -255,8 +255,12 @@ const CompactMenuRenderer = (props: {
             </Match>
             <Match when={item().submenu}>
               <PanelItem
+                checked={item().checked === true}
+                chip={item().sublabel}
+                commandId={item().commandId}
                 level={[item().commandId]}
                 name={item().label}
+                toolTip={item().toolTip}
                 type={'submenu'}
               >
                 <PanelRenderer
@@ -268,6 +272,8 @@ const CompactMenuRenderer = (props: {
             <Match when={item().type === 'checkbox' || item().type === 'radio'}>
               <PanelItem
                 checked={item().checked === true}
+                chip={item().sublabel}
+                commandId={item().commandId}
                 name={item().label}
                 onChange={() => {
                   props.onClick(
@@ -276,16 +282,20 @@ const CompactMenuRenderer = (props: {
                   );
                   props.onClose();
                 }}
+                toolTip={item().toolTip}
                 type={item().type === 'checkbox' ? 'checkbox' : 'radio'}
               />
             </Match>
             <Match when={true}>
               <PanelItem
+                chip={item().sublabel}
+                commandId={item().commandId}
                 name={item().label}
                 onClick={() => {
                   props.onClick(item().commandId);
                   props.onClose();
                 }}
+                toolTip={item().toolTip}
                 type={'normal'}
               />
             </Match>
